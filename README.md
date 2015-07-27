@@ -1,10 +1,39 @@
 # Description:
-Utilities and wrappers for FreeBSD's bugzilla interface
+CLI utilities and wrappers for FreeBSD's bugzilla instance
 with emphasis on ports.
+
+Provides a consistent API which can have pluggable backends.
 
 Note, this is meant for developers and committers, though
 its possible a non techie might be able to use it.
 
 # Installation
+```sh
+sudo pkg install freebsd-bugzilla-cli
+```
+or
 
-Use the port.  TBD
+```sh
+cd ports-mgmt/freebsd-bugzilla-cli
+sudo make install clean
+```
+
+# Usage
+bz help
+
+# Supported Commands
+- bz login
+- bz submit [patch only for now]
+- bz take
+- bz inprog
+- bz get
+- bz patch
+- bz close
+
+- bz overto
+
+# Future
+- bz timeout
+- bz blocks
+- bz depends
+- bz duplicates

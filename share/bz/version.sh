@@ -1,0 +1,3 @@
+BZ_VERSION=0.0.6
+
+echo ${BZ_VERSION}

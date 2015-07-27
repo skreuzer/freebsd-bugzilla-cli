@@ -1,0 +1,81 @@
+#!/bin/sh
+#
+# Copyright (c) 2015 Philip M. Gollucci <pgollucci@p6m7g8.com>
+# All rights reserved.
+#
+# Shamelessly stolen from FreeBSD's poudriere with modifications.
+
+LC_ALL=C
+unset SHELL
+SAVED_TERM=$TERM
+unset TERM
+
+usage() {
+  cat << EOF
+Usage: bz [-b backend] [-e] [-x] command [options]
+
+Options:
+    -b bend   -- use this backend to talk to bugzilla
+    -x        -- enable debugging (set -x implies -e)
+    -e        -- shit the bed on errors (set -e)
+    -h        -- this help message, use help for a list of commands
+
+backend defaults to pybugz and is the only one the maintainer supports.
+EOF
+
+    exit 1
+}
+
+SETE=""
+SETX=""
+BACKEND=pybugz
+while getopts "b:ehx" FLAG; do
+  case "${FLAG}" in
+    b)
+      BACKEND=$OPTARG
+      ;;
+    e)
+      SETE="-e"
+      ;;
+    x)
+      SETE="-e"
+      SETX="-x"
+      ;;
+    *|-h)
+      usage
+      ;;
+  esac
+done
+
+shift $((OPTIND-1))
+
+[ $# -lt 1 ] && usage
+
+BZ_PATH=$(realpath $0)
+BZ_PREFIX=${BZ_PATH%\/bin/*}
+BZ_SCRIPTDIR=${BZ_PREFIX}/share/bz
+BZ_BACKENDDIR=${BZ_SCRIPTDIR}/${BACKEND}
+
+CMD=$1
+shift
+
+BZ_SCRIPTPATH="${BZ_SCRIPTDIR}/${CMD}.sh"
+
+path=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin
+CMD_ENV="${CMD_ENV} BZ_SCRIPTDIR=${BZ_SCRIPTDIR}"
+CMD_ENV="${CMD_ENV} BZ_BACKENDDIR=${BZ_BACKENDDIR}"
+CMD_ENV="${CMD_ENV} PATH=${path}"
+CMD_ENV="${CMD_ENV} PORTSDIR=${PORTSDIR}"
+CMD_ENV="${CMD_ENV} HOME=${HOME}"
+CMD_ENV="${CMD_ENV} USER=${USER}"
+
+cmds=$(ls -1 ${BZ_SCRIPTDIR} | xargs | sed -e 's,.sh, ,g' -e 's,|$,,')
+for cmd in $cmds; do
+  if [ ${CMD} = ${cmd} ]; then
+      exec env -i ${CMD_ENV} sh ${SETE} ${SETX} "${BZ_SCRIPTPATH}" "$@"
+      exit 0
+  fi
+done
+
+echo "Unknown command: ${CMD}"
+exit 1
