@@ -15,23 +15,31 @@ submit () {
   local bugz=bugz
   [ $f_n -eq 1 ] && bugz=true
 
+  local bug_id
   local rv=$(_is_new_port $port_dir)
   if [ $rv -eq 1 ]; then
     local title=$(_title_generate $port_dir)
-    local bug_id=$(_submit_bug "$title" $hardware "$component" "$severity")
-    _submit_shar $bug_id $port_dir
-  else
-    local delta="/tmp/$$"
-    local title=$(_title_generate $port_dir $delta)
-    if [ x"$title" != x"" ]; then
-      local bug_id=$(_submit_bug "$title" $hardware "$component" "$severity")
-      _submit_patch $bug_id $delta
+    local description=$(_description_get $port_dir "$title")
+    if [ x"$description" != x"" ]; then
+      bug_id=$(_submit_bug "$title" $hardware "$component" "$severity" "$description")
+      _submit_shar $bug_id $port_dir
     fi
-    rm -f $delta
+  else
+    local delta_file=$(mktemp -q /tmp/_bzsubmit-delta.txt.XXXXXX)
+    local desc_file=$(mktemp -q /tmp/_bzsubmit-desc.txt.XXXXXX)
+    local title=$(_title_generate $port_dir $delta_file)
+    local description=$(_description_get $port_dir "$title" $desc_file)
+    if [ x"$title" != x"" -a x"$description" != x"" ]; then
+      bug_id=$(_submit_bug "$title" $hardware "$component" "$severity" "$description")
+      _submit_patch $bug_id $delta_file
+    fi
+    rm -f $desc_file $delta_file
   fi
 
-  [ -n "$portlint_log" ]  && _submit_portlint_log $bug_id $portlint_log
-  [ -n "$poudriere_log" ] && _submit_poudriere_log $bug_id $poudriere_log
+  if [ -n "$bug_id" ]; then
+    [ -n "$portlint_log" ]  && _submit_portlint_log $bug_id $portlint_log
+    [ -n "$poudriere_log" ] && _submit_poudriere_log $bug_id $poudriere_log
+  fi
 }
 
 _submit_shar () {
@@ -103,7 +111,7 @@ _submit_bug () {
        --severity  "$severity"     \
        --platform  "$hardware"     \
        --op-sys    "$os"           \
-       --description "description" \
+       $description                \
        --title     "$title")
   local bug_id=$(echo $str | awk '/submitted/ { print $3 }')
 

@@ -7,8 +7,6 @@
 
 LC_ALL=C
 unset SHELL
-SAVED_TERM=$TERM
-unset TERM
 
 usage() {
   cat << EOF
@@ -68,6 +66,8 @@ CMD_ENV="${CMD_ENV} PATH=${path}"
 CMD_ENV="${CMD_ENV} PORTSDIR=${PORTSDIR}"
 CMD_ENV="${CMD_ENV} HOME=${HOME}"
 CMD_ENV="${CMD_ENV} USER=${USER}"
+CMD_ENV="${CMD_ENV} EDITOR=${EDITOR}"
+CMD_ENV="${CMD_ENV} TERM=${TERM}"
 
 cmds=$(ls -1 ${BZ_SCRIPTDIR} | xargs | sed -e 's,.sh, ,g' -e 's,|$,,')
 for cmd in $cmds; do

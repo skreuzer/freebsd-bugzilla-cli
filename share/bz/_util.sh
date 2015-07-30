@@ -34,52 +34,51 @@ _svn_or_git () {
   echo $vc
 }
 
-_delta_genetate () {
+_delta_generate () {
   local port_dir=$1
-  local delta=$2
+  local delta_file=$2
 
   local vc=$(_svn_or_git)
 
   if [ x"$vc" = x"git" ]; then
-    (cd $PORTSDIR ; git diff $port_dir > $delta)
+    (cd $PORTSDIR ; git diff $port_dir > $delta_file)
   else
-    (cd $PORTSDIR ; svn diff $port_dir > $delta)
+    (cd $PORTSDIR ; svn diff $port_dir > $delta_file)
   fi
 }
 
 _title_generate () {
   local port_dir=$1
-  local delta=$2
-
-  if [ -z "$delta" ]; then
-    local comment=$(cd $PORTSDIR/$port_dir ; make -V COMMENT)
-    echo "[new port]: $port_dir - $comment"
-    return
-  fi
-
-  _delta_generate $port_dir $delta
+  local delta_file=$2
 
   local title
-  if [ -z "$(cat $delta)" ]; then
-    title=""
+  if [ -z "$delta_file" ]; then
+    local comment=$(cd $PORTSDIR/$port_dir ; make -V COMMENT)
+    title="[new port]: $port_dir - $comment"
   else
-    title="[patch]: $port_dir"
-    local cv=$(grep -c '^[+-]PORTVERSION' $delta)
-    if [ $cv -eq 2 ]; then
-      local oldv=$(awk '/^-PORTVERSION/ { print $2 }'  $delta)
-      local newv=$(awk '/^\+PORTVERSION/ { print $2 }' $delta)
-      [ $oldv != $newv ] && title="$title, update $oldv->$newv"
-    fi
+    _delta_generate $port_dir $delta_file
 
-    local cm=$(grep -c '^[+-]MAINTAINER' $delta)
-    if [ $cm -eq 2 ]; then
-      local oldm=$(awk '/^-MAINTAINER/ { print $2 }'  $delta)
-      local newm=$(awk '/^\+MAINTAINER/ { print $2 }' $delta)
-      [ $oldm != $newm ] && title="$title, maintainer $oldm->$newm"
-    fi
+    if [ -z "$(cat $delta_file)" ]; then
+      title=""
+    else
+      title="[patch]: $port_dir"
+      local cv=$(grep -c '^[+-]PORTVERSION' $delta)
+      if [ $cv -eq 2 ]; then
+        local oldv=$(awk '/^-PORTVERSION/ { print $2 }'  $delta)
+        local newv=$(awk '/^\+PORTVERSION/ { print $2 }' $delta)
+        [ $oldv != $newv ] && title="$title, update $oldv->$newv"
+      fi
 
-    local maintainer=$(cd $PORTSDIR/$port_dir ; make -V MAINTAINER)
-    [ $REPORTER = $maintainer ] && title="(maintainer) $title"
+      local cm=$(grep -c '^[+-]MAINTAINER' $delta)
+      if [ $cm -eq 2 ]; then
+        local oldm=$(awk '/^-MAINTAINER/ { print $2 }'  $delta)
+        local newm=$(awk '/^\+MAINTAINER/ { print $2 }' $delta)
+        [ $oldm != $newm ] && title="$title, maintainer $oldm->$newm"
+      fi
+
+      local maintainer=$(cd $PORTSDIR/$port_dir ; make -V MAINTAINER)
+      [ $REPORTER = $maintainer ] && title="(maintainer) $title"
+    fi
   fi
 
   echo "$title"
@@ -102,4 +101,24 @@ _is_new_port () {
       echo 1
     fi
   fi
+}
+
+_description_get () {
+  local port_dir=$1
+  local title="$2"
+  local desc_file=$3
+
+  local description
+  if echo $title | grep -q "new"; then
+    if [ ! -e $PORTSDIR/$port_dir/pkg-descr ]; then
+      echo "$PORTSDIR/$port_dir/pkg-descr does not exist!" >2
+    else
+      description="--description-from $PORTSDIR/$port_dir/pkg-descr"
+    fi
+  else
+#    $EDITOR $desc_file > /dev/tty
+    description="--description-from $desc_file"
+  fi
+
+  echo "$description"
 }
