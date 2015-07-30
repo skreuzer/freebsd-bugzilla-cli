@@ -3,8 +3,11 @@
 submit () {
   local port_dir=$1
   local f_n=$2
-  local portlint_log=$3
-  local poudriere_log=$4
+  local hardware=$3
+  local component="$4"
+  local severity="$5"
+  local portlint_log=$6
+  local poudriere_log=$7
 
   ## Load Config
   [ -e $HOME/.fbcrc ] && . $HOME/.fbcrc
@@ -15,13 +18,13 @@ submit () {
   local rv=$(_is_new_port $port_dir)
   if [ $rv -eq 1 ]; then
     local title=$(_title_generate $port_dir)
-    local bug_id=$(_submit_bug "$title")
+    local bug_id=$(_submit_bug "$title" $hardware "$component" "$severity")
     _submit_shar $bug_id $port_dir
   else
     local delta="/tmp/$$"
     local title=$(_title_generate $port_dir $delta)
     if [ x"$title" != x"" ]; then
-      local bug_id=$(_submit_bug "$title")
+      local bug_id=$(_submit_bug "$title" $hardware "$component" "$severity")
       _submit_patch $bug_id $delta
     fi
     rm -f $delta
@@ -84,12 +87,12 @@ _submit_poudriere_log () {
 
 _submit_bug () {
   local title="$1"
+  local hardware=$2
+  local component="$3"
+  local severity="$4"
 
   local product="Ports & Packages"
   local version="Latest"
-  local component="Individual Port(s)"
-  local severity="Affects Only Me"
-  local hardware="Any"
   local os="Any"
 
   local str=$($bugz post           \
