@@ -19,6 +19,34 @@ _port_from_pr () {
   echo $port
 }
 
+_svn_or_git () {
+
+  local vc
+  if [ -d $PORTSDIR/.git ]; then
+    vc=git
+  elif [ -d $PORTSDIR/.svn ]; then
+    vc=svn
+  else
+    echo "Unable to determine checkout type of $PORTSDIR.  Only svn/git supported"
+    exit 1
+  fi
+
+  echo $vc
+}
+
+_delta_genetate () {
+  local port_dir=$1
+  local delta=$2
+
+  local vc=$(_svn_or_git)
+
+  if [ x"$vc" = x"git" ]; then
+    (cd $PORTSDIR ; git diff $port_dir > $delta)
+  else
+    (cd $PORTSDIR ; svn diff $port_dir > $delta)
+  fi
+}
+
 _title_generate () {
   local port_dir=$1
   local delta=$2
@@ -28,10 +56,9 @@ _title_generate () {
     return
   fi
 
-  (cd $PORTSDIR ; git diff $port_dir > $delta)
+  _delta_generate $port_dir $delta
 
   local title
-
   if [ -z "$(cat $delta)" ]; then
     title=""
   else
@@ -61,9 +88,18 @@ _title_generate () {
 _is_new_port () {
   local port_dir=$1
 
-  if $(cd $PORTSDIR && git ls-files --error-unmatch $port_dir >/dev/null 2>&1); then
-    echo 0
+  local vc=$(_svn_or_git)
+  if [ x"$vc" = x"git" ]; then
+    if $(cd $PORTSDIR && git ls-files --error-unmatch $port_dir >/dev/null 2>&1); then
+      echo 0
+    else
+      echo 1
+    fi
   else
-    echo 1
+    if $(cd $PORTSDIR && svn ls $port_dir >/dev/null 2>&1); then
+      echo 0
+    else
+      echo 1
+    fi
   fi
 }
