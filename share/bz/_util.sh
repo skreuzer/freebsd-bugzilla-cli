@@ -78,9 +78,8 @@ _title_generate () {
       [ $oldm != $newm ] && title="$title, maintainer $oldm->$newm"
     fi
 
-    local reporter="$USER@$(hostname)"
     local maintainer=$(cd $PORTSDIR/$port_dir ; make -V MAINTAINER)
-    [ $reporter = $maintainer ] && title="(maintainer) $title"
+    [ $REPORTER = $maintainer ] && title="(maintainer) $title"
   fi
 
   echo "$title"

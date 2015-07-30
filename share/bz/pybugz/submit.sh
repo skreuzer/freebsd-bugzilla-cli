@@ -6,6 +6,9 @@ submit () {
   local portlint_log=$3
   local poudriere_log=$4
 
+  ## Load Config
+  [ -e $HOME/.fbcrc ] && . $HOME/.fbcrc
+
   local bugz=bugz
   [ $f_n -eq 1 ] && bugz=true
 
