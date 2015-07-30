@@ -27,16 +27,6 @@ submit () {
   [ -n "$poudriere_log" ] && _submit_poudriere_log $bug_id $poudriere_log
 }
 
-_is_new_port () {
-  local port_dir=$1
-
-  if $(cd $PORTSDIR && git ls-files --error-unmatch $port_dir >/dev/null 2>&1); then
-    echo 0
-  else
-    echo 1
-  fi
-}
-
 _submit_shar () {
   local bug_id=$1
   local port_dir=$2

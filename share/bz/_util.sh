@@ -57,3 +57,13 @@ _title_generate () {
 
   echo "$title"
 }
+
+_is_new_port () {
+  local port_dir=$1
+
+  if $(cd $PORTSDIR && git ls-files --error-unmatch $port_dir >/dev/null 2>&1); then
+    echo 0
+  else
+    echo 1
+  fi
+}
