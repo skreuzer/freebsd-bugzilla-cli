@@ -23,7 +23,7 @@ bz help
 
 # Supported Commands
 - bz login
-- bz submit [patch only for now]
+- bz submit
 - bz take
 - bz inprog
 - bz get
