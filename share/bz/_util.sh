@@ -1,3 +1,5 @@
+bugz=bugz
+
 _pr_dir () {
   local pr=$1
 
@@ -116,7 +118,7 @@ _description_get () {
       description="--description-from $PORTSDIR/$port_dir/pkg-descr"
     fi
   else
-#    $EDITOR $desc_file > /dev/tty
+    $EDITOR $desc_file > /dev/tty
     description="--description-from $desc_file"
   fi
 

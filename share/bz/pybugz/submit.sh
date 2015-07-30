@@ -12,7 +12,6 @@ submit () {
   ## Load Config
   [ -e $HOME/.fbcrc ] && . $HOME/.fbcrc
 
-  local bugz=bugz
   [ $f_n -eq 1 ] && bugz=true
 
   local bug_id
