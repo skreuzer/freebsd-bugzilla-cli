@@ -22,6 +22,7 @@ sudo make install clean
 bz help
 
 # Supported Commands
+- bz init
 - bz login
 - bz submit
 - bz take
