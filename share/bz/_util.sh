@@ -52,7 +52,8 @@ _title_generate () {
   local delta=$2
 
   if [ -z "$delta" ]; then
-    echo "[new port]: $port_dir"
+    local comment=$(cd $PORTSDIR/$port_dir ; make -V COMMENT)
+    echo "[new port]: $port_dir - $comment"
     return
   fi
 
