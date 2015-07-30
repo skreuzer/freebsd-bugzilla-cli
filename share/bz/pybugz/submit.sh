@@ -82,7 +82,6 @@ _submit_poudriere_log () {
       $bug_id $poudriere_log
 }
 
-
 _submit_bug () {
   local title="$1"
 
