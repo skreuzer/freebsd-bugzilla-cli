@@ -1,3 +1,3 @@
-BZ_VERSION=0.1.0
+BZ_VERSION=0.1.1
 
 echo ${BZ_VERSION}
