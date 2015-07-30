@@ -1,12 +1,13 @@
 . ${BZ_SCRIPTDIR}/_util.sh
 
-#bugz=bugz
-bugz=true
-
 submit () {
   local port_dir=$1
-  local portlint_log=$2
-  local poudriere_log=$3
+  local f_n=$2
+  local portlint_log=$3
+  local poudriere_log=$4
+
+  local bugz=bugz
+  [ $f_n -eq 1 ] && bugz=true
 
   local rv=$(_is_new_port $port_dir)
   if [ $rv -eq 1 ]; then
