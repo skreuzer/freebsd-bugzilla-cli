@@ -1,14 +1,8 @@
 . ${BZ_SCRIPTDIR}/_util.sh
 
-bztop () {
-  local field=$1
+backend_top () {
+  local pos=$1
   local limit=$2
-
-  local pos=-1
-  case $field in
-    asignee) pos=2 ;;
-#    reporter) pos=3 ;; # XXX: needs https://github.com/williamh/pybugz/pull/85
-  esac
 
   $bugz                               \
       --encoding=utf8                 \
