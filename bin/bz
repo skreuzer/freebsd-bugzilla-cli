@@ -49,6 +49,22 @@ shift $((OPTIND-1))
 
 [ $# -lt 1 ] && usage
 
+if [ ! -e $HOME/.fbcrc ]; then
+  echo "must run init first"
+  exit 1
+fi
+
+if [ -z "$PORTSDIR" ]; then
+  PORTSDIR=/usr/ports
+fi
+
+if [ ! -d $PORTSDIR/Mk ]; then
+  echo "$PORTSDIR is invalid"
+  exit 1
+fi
+
+[ -z "$EDITOR" ] && EDITOR=vi
+
 BZ_PATH=$(realpath $0)
 BZ_PREFIX=${BZ_PATH%\/bin/*}
 BZ_SCRIPTDIR=${BZ_PREFIX}/share/bz
