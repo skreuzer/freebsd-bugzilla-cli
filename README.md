@@ -32,9 +32,9 @@ bz help
 - bz close
 
 - bz overto
+- bz timeout
 
 # Future
-- bz timeout
 - bz blocks
 - bz depends
 - bz duplicates
