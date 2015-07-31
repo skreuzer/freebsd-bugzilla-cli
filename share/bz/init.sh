@@ -1,3 +1,15 @@
+usage () {
+  cat <<EOF
+Usage bz init [-h]
+
+Options:
+    -h    -- this help message
+
+Will initilaize config files in ~ for itself and ${BZ_BACKEND}.
+EOF
+  exit 1
+}
+
 bzinit () {
 
   local user
@@ -27,17 +39,6 @@ EOF
 
   local url="https://bugs.freebsd.org/bugzilla/xmlrpc.cgi"
   backend_init $url $user $password
-}
-
-usage () {
-  cat <<EOF
-Usage bz init [-h]
-
-Options:
-    -h    -- this help message
-
-Will initilaize config files in ~ for itself and ${BZ_BACKEND}.
-EOF
 }
 
 . ${BZ_BACKENDDIR}/init.sh
