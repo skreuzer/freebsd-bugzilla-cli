@@ -16,6 +16,15 @@ EOF
   exit 1
 }
 
+overto () {
+  local pr=$1
+  local comment=$2
+  local state=$3
+  local who=$4
+
+  backend_overto $who "$comment" "$state" $pr
+}
+
 . ${BZ_BACKENDDIR}/overto.sh
 
 who=
