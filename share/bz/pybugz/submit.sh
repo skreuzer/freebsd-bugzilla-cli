@@ -13,7 +13,7 @@ backend_submit () {
 
   [ $f_n -eq 1 ] && bugz=true
 
-  local str=$(
+  local str="$(
     $bugz post                     \
        --batch                     \
        --product   "$product"      \
@@ -22,9 +22,9 @@ backend_submit () {
        --severity  "$severity"     \
        --platform  "$hardware"     \
        --op-sys    "$os"           \
-       --description_from $description \
+       --description-from $description \
        --title     "$title"
-        )
+        )"
   local bug_id=$(echo $str | awk '/submitted/ { print $3 }')
 
   # XXX: allow debugging

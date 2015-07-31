@@ -1,6 +1,6 @@
 usage () {
   cat <<EOF
-Usage: bz close [-c comment] [-e] pr
+Usage: bz close [-c comment | -e] pr
        bz take -h
 
 Options:
@@ -24,9 +24,9 @@ close () {
 
   local comment_file=$(mktemp -q /tmp/_bz-comment.txt.XXXXXX)
   if [ $f_e -eq 1 ]; then
-    echo "$comment" > $comment_file
+      $EDITOR $comment_file >/dev/tty
   else
-    $EDITOR $comment_file >/dev/tty
+    [ -z "$comment" ] && echo "$comment" > $comment_file
   fi
 
   backend_close $pr

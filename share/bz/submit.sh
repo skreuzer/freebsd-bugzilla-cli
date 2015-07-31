@@ -100,10 +100,12 @@ _submit_poudriere_log () {
 }
 
 _submit_bug () {
-  local title="$1"
-  local hardware=$2
-  local component="$3"
-  local severity="$4"
+  local f_n=$1
+  local title="$2"
+  local hardware=$3
+  local component="$4"
+  local severity="$5"
+  local description="$6"
 
   local product="Ports & Packages"
   local version="Latest"

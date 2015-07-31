@@ -26,5 +26,6 @@ release:
 	git commit -m "Tag ${VERSION}"
 	git tag ${VERSION}
 	git push --tags
+	git push
 
 .PHONY: install release
