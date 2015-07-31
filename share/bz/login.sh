@@ -1,6 +1,6 @@
 usage () {
     cat <<EOF
-Usage bz login [-h]
+Usage bz login [-h] [-- backend args]
 
 Options:
     -h    -- this help message
