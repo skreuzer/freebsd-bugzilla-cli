@@ -1,3 +1,3 @@
-BZ_VERSION=0.5.0
+. ${BZ_SCRIPTDIR}/_version.sh
 
 echo ${BZ_VERSION}
