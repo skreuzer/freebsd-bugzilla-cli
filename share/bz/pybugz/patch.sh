@@ -18,7 +18,7 @@ _bzpatch_patch () {
   local d=$1
   local pr=$2
 
-  local port=$(_port_from_pr $d $pr)
+  local port=$(_port_from_pr $d)
 
   local l=$(egrep "^Index:|^diff |^--- " $d/patch | head -1 | awk '{ print gsub(/\//,"") }')
   local p
@@ -36,7 +36,7 @@ _bzpatch_shar () {
   local d=$1
   local pr=$2
 
-  local port=$(_port_from_pr $d $pr)
+  local port=$(_port_from_pr $d)
 
   local l=$(grep /Makefile $d/patch | head -1 | awk '{ print gsub(/\//,"") }')
   if [ $l -eq 1 ]; then

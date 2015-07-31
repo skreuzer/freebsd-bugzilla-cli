@@ -13,7 +13,6 @@ _pr_dir () {
 
 _port_from_pr () {
   local d=$1
-  local pr=$2
 
   local title=$(grep Title $d/pr | cut -d: -f 2- | sed -e 's,^ *,,')
   local port=$(echo $title | egrep -o "[_a-zA-Z0-9\-]*/[_a-zA-Z0-9\-]*" | head -1)
