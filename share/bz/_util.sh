@@ -144,7 +144,7 @@ _days_since_action () {
   local status=$(_json_find_key_value "status" "$json")
 
   case $status in
-#    "+") echo 0 ;;
+    "+") echo 0 ;;
     *)   echo $(_days_since $created) ;;
   esac
 }
