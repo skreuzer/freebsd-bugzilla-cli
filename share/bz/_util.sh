@@ -63,17 +63,17 @@ _title_generate () {
       title=""
     else
       title="[patch]: $port_dir"
-      local cv=$(grep -c '^[+-]PORTVERSION' $delta)
+      local cv=$(grep -c '^[+-]PORTVERSION' $delta_file)
       if [ $cv -eq 2 ]; then
-        local oldv=$(awk '/^-PORTVERSION/ { print $2 }'  $delta)
-        local newv=$(awk '/^\+PORTVERSION/ { print $2 }' $delta)
+        local oldv=$(awk '/^-PORTVERSION/ { print $2 }'  $delta_file)
+        local newv=$(awk '/^\+PORTVERSION/ { print $2 }' $delta_file)
         [ $oldv != $newv ] && title="$title, update $oldv->$newv"
       fi
 
-      local cm=$(grep -c '^[+-]MAINTAINER' $delta)
+      local cm=$(grep -c '^[+-]MAINTAINER' $delta_file)
       if [ $cm -eq 2 ]; then
-        local oldm=$(awk '/^-MAINTAINER/ { print $2 }'  $delta)
-        local newm=$(awk '/^\+MAINTAINER/ { print $2 }' $delta)
+        local oldm=$(awk '/^-MAINTAINER/ { print $2 }'  $delta_file)
+        local newm=$(awk '/^\+MAINTAINER/ { print $2 }' $delta_file)
         [ $oldm != $newm ] && title="$title, maintainer $oldm->$newm"
       fi
 
@@ -114,11 +114,11 @@ _description_get () {
     if [ ! -e $PORTSDIR/$port_dir/pkg-descr ]; then
       echo "$PORTSDIR/$port_dir/pkg-descr does not exist!" >2
     else
-      description="--description-from $PORTSDIR/$port_dir/pkg-descr"
+      description="$PORTSDIR/$port_dir/pkg-descr"
     fi
   else
     $EDITOR $desc_file > /dev/tty
-    description="--description-from $desc_file"
+    description="$desc_file"
   fi
 
   echo "$description"
