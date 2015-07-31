@@ -1,13 +1,13 @@
 usage () {
   cat <<EOF
-Usage: bz top asignee|reporter [limit]
+Usage: bz top assignee|reporter [limit]
        bz top
 
 Options:
     -h    -- this help message
 
 Args:
-    asignee    -- group by assigned_to
+    assignee    -- group by assigned_to
     reporter   -- group by creator
     limit      -- this many result rows
 
@@ -26,7 +26,7 @@ bztop () {
 
   local pos=-1
   case $field in
-    asignee) pos=2 ;;
+    assignee) pos=2 ;;
     reporter) pos=3 ;;
   esac
 
