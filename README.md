@@ -19,7 +19,9 @@ sudo make install clean
 ```
 
 # Usage
+bz init
 bz help
+bz ...
 
 All subcommands support -h for help
 
