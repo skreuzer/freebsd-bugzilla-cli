@@ -21,6 +21,8 @@ sudo make install clean
 # Usage
 bz help
 
+All subcommands support -h for help
+
 # Supported Commands
 - bz init
 - bz login
