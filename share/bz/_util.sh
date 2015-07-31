@@ -62,7 +62,7 @@ _title_generate () {
     if [ -z "$(cat $delta_file)" ]; then
       title=""
     else
-      title="[patch]: $port_dir"
+      title="[patch]: $port_dir "
       local cv=$(grep -c '^[+-]PORTVERSION' $delta_file)
       if [ $cv -eq 2 ]; then
         local oldv=$(awk '/^-PORTVERSION/ { print $2 }'  $delta_file)
