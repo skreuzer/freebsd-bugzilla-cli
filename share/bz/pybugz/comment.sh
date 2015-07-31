@@ -1,12 +1,8 @@
 . ${BZ_SCRIPTDIR}/_util.sh
 
-comment() {
+backend_comment () {
   local pr=$1
-
-  local comment_file=$(mktemp -q /tmp/_bz-comment.txt.XXXXXX)
-  $EDITOR $comment_file >/dev/tty
+  local comment="$2"
 
   $bugz modify -F $comment_file $pr
-
-  rm -f $comment_file
 }
