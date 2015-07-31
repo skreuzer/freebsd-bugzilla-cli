@@ -25,14 +25,17 @@ bz help
 - bz init
 - bz login
 - bz submit
+- bz search
 - bz take
 - bz inprog
+- bz comment
 - bz get
 - bz patch
 - bz close
 
 - bz overto
 - bz timeout
+- bz top
 
 # Future
 - bz blocks
