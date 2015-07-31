@@ -22,7 +22,7 @@ install:
 
 release:
 	sed -i '' -e "s,BZ_VERSION=.*,BZ_VERSION=${VERSION}," ${DATADIR_REL}/_version.sh
-	git add ${DATADIR_REL}/version.sh
+	git add ${DATADIR_REL}/_version.sh
 	git commit -m "Tag ${VERSION}"
 	git tag ${VERSION}
 	git push --tags
