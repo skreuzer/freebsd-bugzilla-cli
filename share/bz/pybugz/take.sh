@@ -1,5 +1,7 @@
-take () {
+. ${BZ_SCRIPTDIR}/_util.sh
+
+backend_take () {
   local pr=$1
 
-  bugz modify -a $USER@freebsd.org -s Open -c "Take." $pr
+  $bugz modify -a $REPORTER -s Open -c "Take." $pr
 }
