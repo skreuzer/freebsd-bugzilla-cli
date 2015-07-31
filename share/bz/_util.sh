@@ -123,3 +123,51 @@ _description_get () {
 
   echo "$description"
 }
+
+_days_since () {
+  local date=$1
+
+  local ethen=$(date -j -f "%Y%m%d" "$date" "+%s")
+  local enow=$(date -j -f "%a %b %d %T %Z %Y" "`date`" "+%s")
+  local days=$(printf "%.0f" $(echo "scale=2; ($enow - $ethen)/(60*60*24)" | bc))
+
+  echo $days
+}
+
+_days_since_action () {
+  local d=$1
+
+  local json=$(grep ^flags $d/pr | sed -e "s,^flags       :,,")
+
+  local created=$(_json_find_key_value "creation_date" "$json" 1)
+  local modified=$(_json_find_key_value "modification_date" "$json" 1)
+  local status=$(_json_find_key_value "status" "$json")
+
+  case $status in
+#    "+") echo 0 ;;
+    *)   echo $(_days_since $created) ;;
+  esac
+}
+
+_json_find_key_value () {
+  local key=$1
+  local json="$2"
+  local f_d=${3:-0}
+
+  local pair=$(echo "$json" | awk -F"," -v k="$key" '{
+    gsub(/{|}/,"")
+    for(i=1;i<=NF;i++){
+        if ( $i ~ k ){
+            print $i
+        }
+    }
+}'
+        )
+  local v=$(echo $pair | awk -F: '{ print $2 }' | sed -e "s,',,g" -e 's, *,,g')
+
+  if [ $f_d -eq 1 ]; then
+    echo "$v" | sed -e 's,<DateTime,,' -e 's,T.*,,'
+  else
+    echo "$v"
+  fi
+}
