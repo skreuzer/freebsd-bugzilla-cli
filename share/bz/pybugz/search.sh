@@ -6,9 +6,5 @@ backend_search () {
   $bugz                            \
       --encoding=utf8              \
       search                       \
-      --product "Ports & Packages" \
-      -s New                       \
-      -s Open                      \
-      -s "In Progress"             \
       $arg_str
 }

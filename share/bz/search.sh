@@ -1,16 +1,17 @@
 usage () {
   cat <<EOF
-Usage: bz search [-h] [-- backend search args]
+Usage: bz search [-- backend search args]
+       bz search -h
 
 Optional:
     -h    -- this help message
 
 Will search by default for all new,open,in progress bugs in ports.
-All subsequent command args will be sent to the $BZ_BACKEND.
+All subsequent command args will be sent to the $BZ_BACKEND backend.
 
 i.e.
   # pybugz backend
-  bz search -- -apgollucci@FreeBSD.org
+  `$bugz search -h`
 EOF
 
   exit 1
@@ -22,6 +23,7 @@ search () {
   backend_search "$arg_str"
 }
 
+. ${BZ_SCRIPTDIR}/_util.sh
 . ${BZ_BACKENDDIR}/search.sh
 
 while getopts h FLAG; do
