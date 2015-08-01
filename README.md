@@ -19,9 +19,9 @@ sudo make install clean
 ```
 
 # Usage
-bz init
-bz help
-bz ...
+- bz init
+- bz help
+- bz help $cmd or bz $cmd -h
 
 All subcommands support -h for help
 
