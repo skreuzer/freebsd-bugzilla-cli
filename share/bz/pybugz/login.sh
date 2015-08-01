@@ -3,5 +3,5 @@
 backend_login () {
   local arg_str="$1"
 
-  $bugz login $@
+  $bugz login $arg_str
 }
