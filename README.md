@@ -18,6 +18,11 @@ cd ports-mgmt/freebsd-bugzilla-cli
 sudo make install clean
 ```
 
+# Run from git
+git clone git@github.com:pgollucci/freebsd-bugzilla-cli.git
+cd freebsd-bugzilla-cli
+./autogen.sh
+
 # Usage
 - bz init
 - bz help
