@@ -1,4 +1,7 @@
-cat <<EOF
+if [ -n "$1" ]; then
+  ${ME} $1 -h
+else
+  cat <<EOF
 close        - close a pr
 comment      - comment on a pr
 get          - get a pr locally, needed for patch
@@ -15,3 +18,4 @@ timeout      - comment on a pr stating maintainer and timeout duration
 top          - show top assignee / reporters
 version      - display software version
 EOF
+fi

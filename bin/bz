@@ -77,6 +77,7 @@ CMD_ENV="${CMD_ENV} HOME=${HOME}"
 CMD_ENV="${CMD_ENV} USER=${USER}"
 CMD_ENV="${CMD_ENV} EDITOR=${EDITOR}"
 CMD_ENV="${CMD_ENV} TERM=${TERM}"
+CMD_ENV="${CMD_ENV} ME=$0"
 
 if [ -f ${BZ_SCRIPTPATH}  ]; then
   exec env -i ${CMD_ENV} sh ${SETE} ${SETX} "${BZ_SCRIPTPATH}" "$@"
