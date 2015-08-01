@@ -6,7 +6,6 @@ Usage: bz search [-- backend search args]
 Optional:
     -h    -- this help message
 
-Will search by default for all new,open,in progress bugs in ports.
 All subsequent command args will be sent to the $BZ_BACKEND backend.
 
 i.e.
