@@ -12,7 +12,7 @@ login        - login to bugzilla
 overto       - reassign a pr to someone
 patch        - patch a port
 search       - search prs
-submit       - submit a pr with shar/patch for a port
+port_submit  - submit a pr with shar/patch for a port
 take         - assign a pr to yourself
 timeout      - comment on a pr stating maintainer and timeout duration
 top          - show top assignee / reporters

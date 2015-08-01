@@ -1,6 +1,6 @@
 usage() {
   cat <<EOF
-Usage: bz submit [-p poudriere_log] [-P portlint_log] [-n] [-s severity] [-a arch] [-c component] [cat/port]
+Usage: bz port_submit [-p poudriere_log] [-P portlint_log] [-n] [-s severity] [-a arch] [-c component] [cat/port]
        bz submit -h
 
 Options:
@@ -39,7 +39,7 @@ submit () {
     local title=$(_title_generate $port_dir)
     local description=$(_description_get $port_dir "$title")
     if [ x"$description" != x"" ]; then
-      bug_id=$(_submit_bug $f_n "$title" $hardware "$component" "$severity" "$description")
+      bug_id=$(_submit_ports_bug $f_n "$title" $hardware "$component" "$severity" "$description")
       _submit_shar $bug_id $f_n $port_dir
     fi
   else
@@ -48,7 +48,7 @@ submit () {
     local title=$(_title_generate $port_dir $delta_file)
     local description=$(_description_get $port_dir "$title" $desc_file)
     if [ x"$title" != x"" -a x"$description" != x"" ]; then
-      bug_id=$(_submit_bug $f_n "$title" $hardware "$component" "$severity" "$description")
+      bug_id=$(_submit_ports_bug $f_n "$title" $hardware "$component" "$severity" "$description")
       _submit_patch $bug_id $f_n $delta_file
     fi
     rm -f $desc_file $delta_file
@@ -99,7 +99,7 @@ _submit_poudriere_log () {
   backend_submit_attachment $bug_id $poudriere_log $f_n 0 "poudriere log" "poudriere log"
 }
 
-_submit_bug () {
+_submit_ports_bug () {
   local f_n=$1
   local title="$2"
   local hardware=$3
