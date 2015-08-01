@@ -51,7 +51,7 @@ cp -R share/bz/pybugz share/bz/$backend
 edit all files and replace $bugz calls with something else
 send a GitHub Pull Request
 
-As of v0.5.0 the we will follow Versionsing Rules for the API
+As of v0.5.0 we will follow Versionsing Rules for the API
 so backends can be stable.
 http://apr.apache.org/versioning.html
 
