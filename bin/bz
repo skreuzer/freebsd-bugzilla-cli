@@ -54,6 +54,9 @@ if [ x"$1" != x"init" ]; then
     echo "must run init first"
     exit 1
   fi
+  [ -z "$PORTSDIR" ] && PORTSDIR=/usr/ports
+  [ -z "$SRCDIR" ]   && SRCDIR=/usr/src
+
   [ -z "$EDITOR" ] && EDITOR=vi
 fi
 
@@ -73,6 +76,7 @@ CMD_ENV="${CMD_ENV} BZ_BACKENDDIR=${BZ_BACKENDDIR}"
 CMD_ENV="${CMD_ENV} BZ_BACKEND=${BZ_BACKEND}"
 CMD_ENV="${CMD_ENV} PATH=${path}"
 CMD_ENV="${CMD_ENV} PORTSDIR=${PORTSDIR}"
+CMD_ENV="${CMD_ENV} SRCDIR=${SRCDIR}"
 CMD_ENV="${CMD_ENV} HOME=${HOME}"
 CMD_ENV="${CMD_ENV} USER=${USER}"
 CMD_ENV="${CMD_ENV} EDITOR=${EDITOR}"
