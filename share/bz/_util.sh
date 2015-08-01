@@ -159,15 +159,7 @@ _json_find_key_value () {
   local json="$2"
   local f_d=${3:-0}
 
-  local pair=$(echo "$json" | awk -F"," -v k="$key" '{
-    gsub(/{|}/,"")
-    for(i=1;i<=NF;i++){
-        if ( $i ~ k ){
-            print $i
-        }
-    }
-}'
-        )
+  local pair=$(echo "$json" | awk -F"," -v k="$key" '{ gsub(/{|}/,"") for(i=1;i<=NF;i++){if($i~k){print $i}}}')
   local v=$(echo $pair | awk -F: '{ print $2 }' | sed -e "s,',,g" -e 's, *,,g')
 
   if [ $f_d -eq 1 ]; then
