@@ -54,21 +54,6 @@ if [ x"$1" != x"init" ]; then
     echo "must run init first"
     exit 1
   fi
-
-  if [ -z "$PORTSDIR" ]; then
-    PORTSDIR=/usr/ports
-  fi
-
-  if [ ! -d $PORTSDIR/Mk ]; then
-    echo "$PORTSDIR must refer to a full ports tree"
-    exit 1
-  fi
-
-  if [ ! -d $PORTSDIR/.git -a ! -d $PORTSDIR/.svn ]; then
-    echo "$PORTSDIR must be using svn or git"
-    exit 1
-  fi
-
   [ -z "$EDITOR" ] && EDITOR=vi
 fi
 
