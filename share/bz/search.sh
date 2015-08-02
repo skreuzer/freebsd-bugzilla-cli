@@ -9,17 +9,15 @@ Optional:
 All subsequent command args will be sent to the $BZ_BACKEND backend.
 
 i.e.
-  # pybugz backend
-  `$bugz search -h`
+#### pybugz backend
+`$bugz search -h`
 EOF
 
   exit 1
 }
 
 search () {
-  local arg_str="$1"
-
-  backend_search "$arg_str"
+  backend_search "$@"
 }
 
 . ${BZ_SCRIPTDIR}/_util.sh
