@@ -33,8 +33,18 @@ bzinit () {
   echo
   [ -z "$password" ] && echo "Blank Password." && exit 1
 
+  echo -n "Default Product [Ports & Packages]: "
+  read product
+  [ -z "$product" ] && product="Ports & Packages"
+
+  echo -n "Default PR state [New,Open,In Progress]: "
+  read state
+  [ -z "$state" ] && state="New,Open,In Progress"
+
   cat <<EOF > $HOME/.fbcrc
 REPORTER=$email
+product="$product"
+state="$state"
 EOF
 
   local url="https://bugs.freebsd.org/bugzilla/xmlrpc.cgi"
