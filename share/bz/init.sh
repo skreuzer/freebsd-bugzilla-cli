@@ -44,18 +44,23 @@ bzinit () {
   echo
   [ -z "$password" ] && echo "Blank Password." && exit 1
 
-  echo -n "Default Product [Ports & Packages]: "
+  echo -n "Search: Default Product [Ports & Packages]: "
   read product
   [ -z "$product" ] && product="Ports & Packages"
 
-  echo -n "Default PR state [New,Open,In Progress]: "
+  echo -n "Search: Default PR state [New,Open,In Progress]: "
   read state
   [ -z "$state" ] && state="New,Open,In Progress"
+
+  echo -n "Search: Default PR assignee [$email]: "
+  read assigned_to
+  [ -z "$assigned_to" ] && assigned_to=$email
 
   cat <<EOF > $HOME/.fbcrc
 REPORTER=$email
 product="$product"
 state="$state"
+assigned_to="$assigned_to"
 EOF
 
   local url="https://bugs.freebsd.org/bugzilla/xmlrpc.cgi"

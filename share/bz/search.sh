@@ -37,8 +37,6 @@ search () {
 . ${BZ_SCRIPTDIR}/_util.sh
 . ${BZ_BACKENDDIR}/search.sh
 
-[ $# -lt 1 ] && usage
-
 assigned_to=
 component=
 hardware=
@@ -51,6 +49,8 @@ version=
 
 ## Load default search criteria
 . $HOME/.fbcrc
+
+[ $# -lt 1 ] && product="Base System,Documentation,Ports & Packages"
 
 while getopts ABDPH:R:S:a:c:hp:r:s:v: FLAG; do
   case ${FLAG} in
