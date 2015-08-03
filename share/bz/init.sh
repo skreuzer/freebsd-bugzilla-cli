@@ -5,7 +5,18 @@ Usage bz init [-h]
 Options:
     -h    -- this help message
 
-Will initilaize config files in ~ for itself and ${BZ_BACKEND}.
+Will initilaize config files in ~ for itself and ${BZ_BACKEND} backend.
+assigned_to
+component
+hardware
+product
+reporter
+resolution
+state
+severity
+version
+
+may be set in the file or overriden on search commandline later.
 EOF
   exit 1
 }
