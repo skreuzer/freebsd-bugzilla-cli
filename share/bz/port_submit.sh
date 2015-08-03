@@ -37,7 +37,7 @@ submit () {
   local rv=$(_is_new_port $port_dir)
   if [ $rv -eq 1 ]; then
     local title=$(_title_generate $port_dir)
-    local description=$(_description_get $port_dir "$title")
+    local description=$(_description_get $port_dir "$title" $f_n)
     if [ x"$description" != x"" ]; then
       bug_id=$(_submit_ports_bug $f_n "$title" $hardware "$component" "$severity" "$description")
       _submit_shar $bug_id $f_n $port_dir
@@ -45,8 +45,10 @@ submit () {
   else
     local delta_file=$(mktemp -q /tmp/_bzsubmit-delta.txt.XXXXXX)
     local desc_file=$(mktemp -q /tmp/_bzsubmit-desc.txt.XXXXXX)
+
+    _delta_generate $port_dir $delta_file
     local title=$(_title_generate $port_dir $delta_file)
-    local description=$(_description_get $port_dir "$title" $desc_file)
+    local description=$(_description_get $port_dir "$title" $f_n $desc_file $delta_file)
     if [ x"$title" != x"" -a x"$description" != x"" ]; then
       bug_id=$(_submit_ports_bug $f_n "$title" $hardware "$component" "$severity" "$description")
       _submit_patch $bug_id $f_n $delta_file

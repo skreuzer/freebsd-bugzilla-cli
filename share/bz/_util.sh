@@ -48,6 +48,103 @@ _delta_generate () {
   fi
 }
 
+_update_str () {
+  local delta_file=$1
+  local prefix="$2"
+
+  local str=""
+  local cv=$(grep -c '^[+-]PORTVERSION' $delta_file)
+  if [ $cv -eq 2 ]; then
+      local oldv=$(awk '/^-PORTVERSION/ { print $2 }'  $delta_file)
+      local newv=$(awk '/^\+PORTVERSION/ { print $2 }' $delta_file)
+      [ $oldv != $newv ] && str="${prefix}update $oldv->$newv"
+  fi
+
+  echo $str
+}
+
+_maintainer_str () {
+  local delta_file=$1
+  local prefix="$2"
+
+  local str=""
+  local cm=$(grep -c '^[+-]MAINTAINER' $delta_file)
+  if [ $cm -eq 2 ]; then
+      local oldm=$(awk '/^-MAINTAINER/ { print $2 }'  $delta_file)
+      local newm=$(awk '/^\+MAINTAINER/ { print $2 }' $delta_file)
+      [ $oldm != $newm ] && str="${prefix}change maintainer $oldm->$newm"
+  fi
+
+  echo $str
+}
+
+_portrevision_str () {
+  local delta_file=$1
+  local prefix="$2"
+
+  local str=""
+  local cpr=$(grep -c '^[+-]PORTREVISION' $delta_file)
+  if [ $cpr -eq 2 ]; then
+      local oldpr=$(awk '/^-PORTREVISION/ { print $2 }'  $delta_file)
+      local newpr=$(awk '/^\+PORTREVISION/ { print $2 }' $delta_file)
+      [ $oldpr != $newpr -a $oldpr = $(($newpr-1)) ] && str="${prefix}bump portrevision"
+  fi
+
+  echo $str
+}
+
+_noarch_str () {
+  local delta_file=$1
+  local prefix="$2"
+
+  local str=""
+  local cna=$(grep -c '^[+-]NO_ARCH' $delta_file)
+  if [ $cna -eq 1 ]; then
+      local newna=$(awk '/^\+NO_ARCH/ { print $2 }' $delta_file)
+      [ -n "$newna" ] && str="${prefix}Set NO_ARCH"
+  fi
+
+  echo $str
+}
+
+_license_str () {
+  local delta_file=$1
+  local prefix="$2"
+
+  local str=""
+  local cl=$(grep -c '^[+-]LICENSE' $delta_file)
+  if [ $cl -eq 1 ]; then
+      local newl=$(awk '/^\+LICENSE/ { print $2 }' $delta_file)
+      [ -n "$newl" ] && str="${prefix}Add LICENSE"
+  fi
+
+  echo $str
+}
+
+_uses_str () {
+  local delta_file=$1
+  local prefix="$2"
+
+  local str=""
+  local ul=$(grep -c '^[+-]USES' $delta_file)
+  if [ $ul -gt 0 ]; then
+      local oldul=$(awk -F= '/^-USES/ { print $2 }'  $delta_file)
+      local newul=$(awk -F= '/^\+USES/ { print $2 }' $delta_file)
+
+      local interesting=$(echo $oldul $newul | sort | uniq -c | sed -e 's,^ *,,' | awk '/^1/ { print $2 }')
+
+      local converts=
+      for use in $interesting; do
+        if [ "${interesting#*$use}" != "$interesting" ]; then
+            converts="$converts, $use"
+        fi
+      done
+      str="${prefix}Convert to USES $(echo $converts | sed -e 's/^, //')"
+  fi
+
+  echo $str
+}
+
 _title_generate () {
   local port_dir=$1
   local delta_file=$2
@@ -57,28 +154,19 @@ _title_generate () {
     local comment=$(cd $PORTSDIR/$port_dir ; make -V COMMENT)
     title="[new port]: $port_dir - $comment"
   else
-    _delta_generate $port_dir $delta_file
-
     if [ -z "$(cat $delta_file)" ]; then
       title=""
     else
-      title="[patch]: $port_dir "
-      local cv=$(grep -c '^[+-]PORTVERSION' $delta_file)
-      if [ $cv -eq 2 ]; then
-        local oldv=$(awk '/^-PORTVERSION/ { print $2 }'  $delta_file)
-        local newv=$(awk '/^\+PORTVERSION/ { print $2 }' $delta_file)
-        [ $oldv != $newv ] && title="$title, update $oldv->$newv"
-      fi
-
-      local cm=$(grep -c '^[+-]MAINTAINER' $delta_file)
-      if [ $cm -eq 2 ]; then
-        local oldm=$(awk '/^-MAINTAINER/ { print $2 }'  $delta_file)
-        local newm=$(awk '/^\+MAINTAINER/ { print $2 }' $delta_file)
-        [ $oldm != $newm ] && title="$title, maintainer $oldm->$newm"
-      fi
-
       local maintainer=$(cd $PORTSDIR/$port_dir ; make -V MAINTAINER)
-      [ $REPORTER = $maintainer ] && title="(maintainer) $title"
+      [ $REPORTER = $maintainer ] && title="(maintainer) "
+
+      title="$title[patch]: $port_dir "
+
+      local ustr=$(_update_str $delta_file)
+      [ -n "$ustr" ] && title="$title , $ustr"
+
+      local mstr=$(_maintainer_str $delta_file)
+      [ -n "$mstr" ] && title="$title , $mstr"
     fi
   fi
 
@@ -104,10 +192,19 @@ _is_new_port () {
   fi
 }
 
+_append_desc () {
+  local desc_file=$1
+  local str="$2"
+
+  [ x"$str" != x"" ] && echo "$str" >> $desc_file
+}
+
 _description_get () {
   local port_dir=$1
   local title="$2"
-  local desc_file=$3
+  local f_n=$3
+  local desc_file=$4
+  local delta_file=$5
 
   local description
   if echo $title | grep -q "new"; then
@@ -117,14 +214,25 @@ _description_get () {
       cat $PORTSDIR/$port_dir/pkg-descr >> $desc_file
     fi
   else
-    $EDITOR $desc_file > /dev/tty
+    echo "$title" | sed -e 's,.*:,,' -e 's/ , /: /' >> $desc_file
+    echo >> $desc_file
+    _append_desc $desc_file "$(_update_str       $delta_file "- ")"
+    _append_desc $desc_file "$(_maintainer_str   $delta_file "- ")"
+    _append_desc $desc_file "$(_portrevision_str $delta_file "- ")"
+    _append_desc $desc_file "$(_license_str      $delta_file "- ")"
+    _append_desc $desc_file "$(_uses_str         $delta_file "- ")"
+    _append_desc $desc_file "$(_noarch_str       $delta_file "- ")"
+
+    if [ $f_n -ne 1 ]; then
+      $EDITOR $desc_file > /dev/tty
+    fi
   fi
   description="$desc_file"
 
   . ${BZ_SCRIPTDIR}/_version.sh
   echo >> $desc_file
   echo "--" >> $desc_file
-  echo "Generated by ports-mgmt/freebsd-bugzilla-cli v${BZ_VERSION}" >> $desc_file
+  echo "Generated by ports-mgmt/freebsd-bugzilla-cli - v${BZ_VERSION}." >> $desc_file
 
   echo "$description"
 }
