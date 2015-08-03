@@ -1,15 +1,17 @@
 . ${BZ_SCRIPTDIR}/_util.sh
 
 backend_edit () {
-  local assigned_to="$1"
-  local component="$2"
-  local hardware="$3"
-  local product="$4"
-  local resolution="$5"
-  local state="$6"
-  local severity="$7"
-  local title="$8"
-  local version="$9"
+  local pr=$1
+  local f_n=$2
+  local assigned_to="$3"
+  local component="$4"
+  local hardware="$5"
+  local product="$6"
+  local resolution="$7"
+  local state="$8"
+  local severity="$9"
+  local title="${10}"
+  local version="${11}"
 
   ## XXX: Shell globbing sucks sometimes
   local edit_file=$(mktemp -q /tmp/_bz-edit.sh.XXXXXX)
@@ -25,8 +27,15 @@ backend_edit () {
   _build_edit_file "$edit_file" "$title"       "--title"
   _build_edit_file "$edit_file" "$version"     "--version"
 
-#  exec sh $edit_file
-  cat $edit_file
+  local comment_file=$(mktemp -q /tmp/_bz-comment.txt.XXXXXX)
+
+  echo " $pr" >> $edit_file
+
+  if [ $f_n -eq 1 ]; then
+    cat $edit_file
+  else
+    exec sh $edit_file
+  fi
 
   rm -f $edit_file
 }

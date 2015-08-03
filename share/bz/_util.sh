@@ -282,8 +282,8 @@ _field_changed () {
   local orig_file=$2
   local new_file=$3
 
-  local old=$(awk "/^$field/ { print }" $orig_file | cut -d: -f 2-)
-  local new=$(awk "/^$field/ { print }" $new_file  | cut -d: -f 2-)
+  local old=$(awk "/^$field/ { print }" $orig_file | head -1 | cut -d: -f 2-)
+  local new=$(awk "/^$field/ { print }" $new_file  | head -1 | cut -d: -f 2-)
 
   if [ x"$old" != x"$new" ]; then
     echo $new
