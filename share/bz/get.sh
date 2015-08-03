@@ -8,6 +8,8 @@ Options:
 
 Args:
     pr    -- pr number
+
+Will download pr and 'patch' into /tmp/$USER/freebsd/ as pr and patch
 EOF
 
   exit 1
