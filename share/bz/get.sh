@@ -9,7 +9,7 @@ Options:
 Args:
     pr    -- pr number
 
-Will download pr and 'patch' into /tmp/$USER/freebsd/ as pr and patch
+Will download pr and 'patch' into /tmp/$USER/freebsd/\$pr as pr and patch
 EOF
 
   exit 1
