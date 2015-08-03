@@ -117,7 +117,7 @@ _submit_ports_bug () {
 }
 
 . ${BZ_SCRIPTDIR}/_util.sh
-. ${BZ_BACKENDDIR}/submit.sh
+. ${BZ_BACKENDDIR}/port_submit.sh
 
 component="Individual Port(s)"
 f_n=0
