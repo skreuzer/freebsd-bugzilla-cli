@@ -40,6 +40,7 @@ All subcommands support -h for help
 - bz take
 - bz inprog
 - bz comment
+- bz edit
 - bz get
 - bz patch
 - bz close
