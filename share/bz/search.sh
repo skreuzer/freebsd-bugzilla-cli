@@ -61,7 +61,5 @@ while getopts a:c:H:hp:r:R:s:S:v: FLAG; do
 done
 shift $(($OPTIND-1))
 
-
-
 search "$assigned_to" "$component" "$hardware" "$product" \
   "$reporter" "$resolution" "$state" "$severity" "$version"
