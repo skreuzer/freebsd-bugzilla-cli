@@ -3,7 +3,7 @@ bugz=bugz
 _pr_dir () {
   local pr=$1
 
-  local d=/tmp/freebsd/$pr
+  local d=/tmp/$USER/freebsd/$pr
   if [ ! -d $d ]; then
     mkdir -p $d
   fi
