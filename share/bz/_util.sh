@@ -276,3 +276,16 @@ _json_find_key_value () {
     echo "$v"
   fi
 }
+
+_field_changed () {
+  local field=$1
+  local orig_file=$2
+  local new_file=$3
+
+  local old=$(awk "/^$field/ { print }" $orig_file | cut -d: -f 2-)
+  local new=$(awk "/^$field/ { print }" $new_file  | cut -d: -f 2-)
+
+  if [ x"$old" != x"$new" ]; then
+    echo $new
+  fi
+}
