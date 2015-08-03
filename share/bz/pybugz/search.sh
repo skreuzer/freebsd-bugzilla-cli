@@ -25,7 +25,7 @@ backend_search () {
   _build_search_file "$search_file" "$severity"    "--severity"
   _build_search_file "$search_file" "$version"     "--version"
 
-  exec sh -x $search_file
+  exec sh $search_file
 
   rm -f $search_file
 }
