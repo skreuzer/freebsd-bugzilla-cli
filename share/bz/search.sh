@@ -1,7 +1,7 @@
 usage () {
   cat <<EOF
 Usage: bz search [-a assigned_to] [-c component] [-H hardware] [-p product] [-r reported_by] \
-     [-R resolution ] [-s state_list] [-S severity] [-v version]
+     [-R resolution ] [-s state] [-S severity] [-v version]
        bz search -h
 
 Optional:
@@ -12,14 +12,12 @@ Optional:
     -p    -- product pr is in
     -r    -- email addree that reported pr
     -R    -- resolution of pr
-    -s    -- state or comma sepearated list of states
+    -s    -- state of pr
     -S    -- severity of pr
     -v    -- only prs affecting this version
 
-Defaults:
-    -s defaults to "New,Open,In Progress"
-
 Defaults may be configured in $HOME/.fbcrc
+Assuming the backend supports it, any option may be a "," seperated list.
 EOF
 
   exit 1
