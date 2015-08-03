@@ -39,7 +39,6 @@ product=
 reporter=
 resolution=
 state=
-#state="New,Open,In Progress"
 severity=
 version=
 
