@@ -1,16 +1,25 @@
 usage () {
   cat <<EOF
-Usage: bz search [-- backend search args]
+Usage: bz search [-a assigned_to] [-c component] [-H hardware] [-p product] [-r reported_by] \
+     [-R resolution ] [-s state_list] [-S severity] [-v version]
        bz search -h
 
 Optional:
+    -a    -- email address pr is assigned to
+    -c    -- component pr is in
+    -H    -- only prs for this hardware
     -h    -- this help message
+    -p    -- product pr is in
+    -r    -- email addree that reported pr
+    -R    -- resolution of pr
+    -s    -- state or comma sepearated list of states
+    -S    -- severity of pr
+    -v    -- only prs affecting this version
 
-All subsequent command args will be sent to the $BZ_BACKEND backend.
+Defaults:
+    -s defaults to "New,Open,In Progress"
 
-i.e.
-#### pybugz backend
-`$bugz search -h`
+Defaults may be configured in $HOME/.fbcrc
 EOF
 
   exit 1
@@ -23,11 +32,39 @@ search () {
 . ${BZ_SCRIPTDIR}/_util.sh
 . ${BZ_BACKENDDIR}/search.sh
 
-while getopts h FLAG; do
+[ $# -lt 1 ] && usage
+
+assigned_to=
+component=
+hardware=
+product=
+reporter=
+resolution=
+state=
+#state="New,Open,In Progress"
+severity=
+version=
+
+## Load default search criteria
+. $HOME/.fbcrc
+
+while getopts a:c:H:hp:r:R:s:S:v: FLAG; do
   case ${FLAG} in
-    h) usage ;;
+    a) assigned_to="$OPTARG" ;;
+    c) component="$OPTARG"   ;;
+    H) hardware="$OPTARG"    ;;
+    p) product="$OPTARG"     ;;
+    r) reporter="$OPTARG"    ;;
+    R) resolution="$OPTARG"  ;;
+    s) state="$OPTARG"       ;;
+    S) severity="$OPTARG"    ;;
+    v) version="$OPTARG"     ;;
+    h|*) usage               ;;
   esac
 done
 shift $(($OPTIND-1))
 
-search "$@"
+
+
+search "$assigned_to" "$component" "$hardware" "$product" \
+  "$reporter" "$resolution" "$state" "$severity" "$version"
