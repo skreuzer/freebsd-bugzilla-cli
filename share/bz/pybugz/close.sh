@@ -2,9 +2,11 @@
 
 backend_close () {
   local pr=$1
-  local comment="$2"
+  local comment_file="$2"
 
-  [ -n "$comment" ] && comment="-c \"$comment\""
-
-  $bugz modify -s "Closed" -r "FIXED" $comment $pr
+  if [ -n "$(cat $comment_file)" ]; then
+      $bugz modify -s "Closed" -r "FIXED" --coment-from $comment_file $pr
+  else
+    $bugz modify -s "Closed" -r "FIXED" $pr
+  fi
 }

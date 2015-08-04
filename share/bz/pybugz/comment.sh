@@ -2,7 +2,7 @@
 
 backend_comment () {
   local pr=$1
-  local comment="$2"
+  local comment_file="$2"
 
-  $bugz modify -F $comment_file $pr
+  $bugz modify --coment-from $comment_file $pr
 }

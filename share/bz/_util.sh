@@ -289,3 +289,19 @@ _field_changed () {
     echo $new
   fi
 }
+
+_run_editor () {
+  local file=$1
+  local output="$2"
+
+  local temp_orig=$(mktemp -q /tmp/editor.txt.orig.XXXXXX)
+  cat $file > $temp_orig
+
+  $EDITOR $file > $output
+
+  if ! cmp -s $file $temp_orig; then
+    echo $temp_orig
+  else
+    echo ""
+  fi
+}

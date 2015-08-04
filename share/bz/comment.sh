@@ -4,8 +4,9 @@ Usage: bz comment [-c comment] pr
        bz comment -h
 
 Options:
-    -h    -- this help message
     -c    -- optional "comment" otherwise $EDITOR will be spawned
+    -h    -- this help message
+
 
 Args:
     pr    -- pr number
@@ -22,7 +23,8 @@ comment() {
   if [ -n "$comment" ]; then
     echo "$comment" > $comment_file
   else
-    $EDITOR $comment_file >/dev/tty
+    local comment_file_orig=$(_run_editor $comment_file /dev/tty)
+    rm -f $comment_file_orig # not used
   fi
 
   backend_comment $pr $comment_file
@@ -30,6 +32,7 @@ comment() {
   rm -f $comment_file
 }
 
+. ${BZ_SCRIPTDIR}/_util.sh
 . ${BZ_BACKENDDIR}/comment.sh
 
 comment=

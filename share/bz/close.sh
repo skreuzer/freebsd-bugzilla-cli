@@ -24,14 +24,20 @@ close () {
 
   local comment_file=$(mktemp -q /tmp/_bz-comment.txt.XXXXXX)
   if [ $f_e -eq 1 ]; then
-      $EDITOR $comment_file >/dev/tty
+      local comment_file_orig=$(_run_editor $comment_file /dev/tty)
+      rm -f $comment_file_orig # not used
   else
     [ -z "$comment" ] && echo "$comment" > $comment_file
   fi
 
-  backend_close $pr
+  if [ -n "$(cat $comment_file)" ]; then
+    backend_close $pr $comment_file
+  fi
+
+  rm -f $comment_file
 }
 
+. ${BZ_SCRIPTDIR}/_util.sh
 . ${BZ_BACKENDDIR}/close.sh
 
 comment=
