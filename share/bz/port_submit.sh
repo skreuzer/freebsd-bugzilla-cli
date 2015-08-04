@@ -39,7 +39,7 @@ submit () {
     local title=$(_title_generate $port_dir)
     local description=$(_description_get $port_dir "$title" $f_n)
     if [ x"$description" != x"" ]; then
-      bug_id=$(_submit_ports_bug $f_n "$title" $hardware "$component" "$severity" "$description")
+      bug_id=$(_submit_ports_bug $f_n "$title" "$hardware" "$component" "$severity" "$description")
       _submit_shar $bug_id $f_n $port_dir
     fi
   else
@@ -50,7 +50,7 @@ submit () {
     local title=$(_title_generate $port_dir $delta_file)
     local description=$(_description_get $port_dir "$title" $f_n $desc_file $delta_file)
     if [ x"$title" != x"" -a x"$description" != x"" ]; then
-      bug_id=$(_submit_ports_bug $f_n "$title" $hardware "$component" "$severity" "$description")
+      bug_id=$(_submit_ports_bug $f_n "$title" "$hardware" "$component" "$severity" "$description")
       _submit_patch $bug_id $f_n $delta_file
     fi
     rm -f $desc_file $delta_file
