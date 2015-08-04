@@ -4,6 +4,7 @@ else
   cat <<EOF
 close        - close a pr
 comment      - comment on a pr
+commit       - COMMIT a pr [will be prompted]
 get          - get a pr locally
 edit         - edit a pr
 help         - display this message
