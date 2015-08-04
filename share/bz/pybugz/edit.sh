@@ -12,6 +12,7 @@ backend_edit () {
   local severity="$9"
   local title="${10}"
   local version="${11}"
+  local comment="${12}"
 
   ## XXX: Shell globbing sucks sometimes
   local edit_file=$(mktemp -q /tmp/_bz-edit.sh.XXXXXX)
@@ -27,7 +28,11 @@ backend_edit () {
   _build_edit_file "$edit_file" "$title"       "--title"
   _build_edit_file "$edit_file" "$version"     "--version"
 
-  local comment_file=$(mktemp -q /tmp/_bz-comment.txt.XXXXXX)
+  if [ -n "$comment" ]; then
+    local comment_file=$(mktemp -q /tmp/_bz-comment.txt.XXXXXX)
+    echo "$comment" >> $comment_file
+    echo "--comment-from $comment_file \\" >> $edit_file
+  fi
 
   echo " $pr" >> $edit_file
 
@@ -37,7 +42,7 @@ backend_edit () {
     exec sh $edit_file
   fi
 
-  rm -f $edit_file
+  rm -f $edit_file $comment_file
 }
 
 _build_edit_file () {

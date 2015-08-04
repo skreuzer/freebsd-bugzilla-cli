@@ -63,8 +63,13 @@ edit () {
       local title=$(_field_changed       'Title'      $d/pr.scratch.orig $d/pr.scratch)
       local version=$(_field_changed     'Version'    $d/pr.scratch.orig $d/pr.scratch)
 
+      ## find comment if any
+      local s=$(grep -n "# Any lines after here will be considered an additional comment to make" $d/pr.scratch | sed -e 's,:.*,,')
+      local e=$(grep -n "# UNEDITABLE attachments and comments follow" $d/pr.scratch | sed -e 's,:.*,,')
+      local comment=$(head -$(($e-1)) $d/pr.scratch | tail -$(($e-$s-1)))
+
       backend_edit $pr $f_n "$assigned_to" "$component" "$hardware" "$product" \
-                   "$resolution" "$state" "$severity" "$title" "$version"
+                   "$resolution" "$state" "$severity" "$title" "$version" "$comment"
   fi
 
   rm -f $d/pr.scratch $d/pr.scratch.orig

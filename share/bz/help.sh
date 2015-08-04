@@ -4,7 +4,8 @@ else
   cat <<EOF
 close        - close a pr
 comment      - comment on a pr
-get          - get a pr locally, needed for patch
+get          - get a pr locally
+edit         - edit a pr
 help         - display this message
 init         - collect info and initialize config files
 inprog       - mark a pr in progress
