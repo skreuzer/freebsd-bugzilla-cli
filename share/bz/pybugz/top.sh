@@ -5,7 +5,6 @@ backend_top () {
   local limit=$2
 
   $bugz                               \
-      --encoding=utf8                 \
       search                          \
       -s New                          \
       -s Open                         \

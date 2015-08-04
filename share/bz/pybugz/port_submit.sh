@@ -7,7 +7,7 @@ backend_submit () {
   local severity="$4"
   local hardware="$5"
   local os="$6"
-  local description="$7"
+  local description_file="$7"
   local title="$8"
   local f_n="$9"
 
@@ -22,7 +22,7 @@ backend_submit () {
        --severity  "$severity"     \
        --platform  "$hardware"     \
        --op-sys    "$os"           \
-       --description-from $description \
+       --description-from $description_file \
        --title     "$title"        \
        | awk '/Bug [0-9]+ submitted/ { print $3 }')
 
