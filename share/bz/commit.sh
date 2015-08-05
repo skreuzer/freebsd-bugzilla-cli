@@ -28,12 +28,43 @@ commit () {
   local d=$(_pr_dir $pr)
   local port_dir=$(_port_from_pr $d)
 
-  ## grab comment with version string which will be #0
-  local comment=$(_get_comment_from_pr $d)
   local commit_file=$(mktemp -q /tmp/_bzcommit-comment.txt.XXXXXX)
-  echo "$comment" > $commit_file
-  local commit_file_orig=$(_run_editor $commit_file /dev/tty)
 
+  local submitter=$(_submitter_from_pr $d)
+  local submitter_short=$(echo $submitter | sed -e 's,FreeBSD.org,,i')
+  local maintainer=$(_maintainer_from_port $port_dir)
+
+  . $HOME/.fbcrc
+
+  ## grab comment with version string which will be #0
+  _comment_from_pr $d > $commit_file
+
+  ## Post amble comment
+  echo >>                            $commit_file
+  echo "PR:                  $pr" >> $commit_file
+
+  if [ "$REPORTER" != "$submitter" ]; then
+    if [ "$submitter" = "$maintainer" ]; then
+      echo "Submitted by:        $submitter_short (maintainer)" >> $commit_file
+    else
+      echo "Submitted by:        $submitter_short" >> $commit_file
+    fi
+  fi
+
+  if [ "$submitter" != "$maintainer" ]; then
+    local timeout_str=$(_timeout_from_pr $d)
+    if [ -n "$timeout_str" ]; then
+      echo "Approved by:         $timeout_str" >> $commit_file
+    else
+      echo "Approved by:         $maintainer" >> $commit_file
+    fi
+  fi
+  if [ -n "$SPONSORED_BY" ]; then
+    echo "Sponsored by:        $SPONSORED_BY" >> $commit_file
+  fi
+
+  local commit_file_orig=$(_run_editor $commit_file /dev/tty)
+  rm -f $commit_file_orig # not used
   ## Are you sure?
   if [ "$vc" = "git" ]; then
       echo "=============================================================================="

@@ -145,7 +145,21 @@ _uses_str () {
   echo $str
 }
 
-_get_comment_from_pr () {
+_submitter_from_pr () {
+  local d=$1
+
+  local submitter=$(grep ^Reporter $d/pr | cut -d: -f 2- | sed -e 's,^ *,,' -e 's, *$,,')
+
+  echo $submitter
+}
+
+_maintainer_from_port () {
+  local port_dir=$1
+
+  (cd $PORTSDIR/$port_dir ; make -V MAINTAINER)
+}
+
+_comment_from_pr () {
   local d=$1
 
   local s=$(grep -n "^\[Comment #0\] " $d/pr | sed -e 's,:.*,,')
@@ -153,6 +167,14 @@ _get_comment_from_pr () {
   local comment=$(head -$(($e-2)) $d/pr | tail -$(($e-$s-3)))
 
   echo "$comment"
+}
+
+_timeout_from_pr () {
+  local d=$1
+
+  local timeout_str=$(grep ^"maintainer timeout (.* ; .* days)" $d/pr)
+
+  echo "$timeout_str"
 }
 
 _title_generate () {
