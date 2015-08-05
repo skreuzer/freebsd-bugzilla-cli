@@ -35,7 +35,7 @@ All subcommands support -h for help
 # Supported Commands
 - bz init
 - bz login
-- bz submit
+- bz port_submit
 - bz search
 - bz take
 - bz inprog
@@ -43,6 +43,7 @@ All subcommands support -h for help
 - bz edit
 - bz get
 - bz patch
+- bz port_commit
 - bz close
 - bz overto
 - bz timeout
