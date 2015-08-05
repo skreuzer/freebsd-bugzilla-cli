@@ -1,9 +1,10 @@
 usage() {
   cat <<EOF
-Usage: bz commit [-n] pr
+Usage: bz commit [-c] [-n] pr
        bz commit -h
 
 Options:
+    -c     -- also close the pr
     -h     -- this help message
     -n     -- dry run, do not actually commit
 
@@ -16,6 +17,7 @@ EOF
 commit () {
   local pr=$1
   local f_n=$2
+  local f_c=$3
 
   ## sync copy
   ${ME} get -n $pr
@@ -99,14 +101,18 @@ commit () {
       )
   fi
 
+  [ $f_n -eq 0 -a $f_c -eq 1 ] && ${ME} close $pr
+
   rm -f $commit_file
 }
 
 . ${BZ_SCRIPTDIR}/_util.sh
 
+f_c=0
 f_n=0
-while getopts hn FLAG; do
+while getopts chn FLAG; do
   case ${FLAG} in
+    c) f_c=1 ;;
     n) f_n=1 ;;
     *|h) usage ;;
   esac
@@ -115,4 +121,4 @@ shift $(($OPTIND-1))
 
 pr=$1
 
-commit $pr $f_n
+commit $pr $f_n $f_c
