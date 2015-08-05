@@ -13,7 +13,6 @@ EOF
   exit 1
 }
 
-# XXX: add svn
 commit () {
   local pr=$1
   local f_n=$2
@@ -66,13 +65,15 @@ commit () {
   local commit_file_orig=$(_run_editor $commit_file /dev/tty)
   rm -f $commit_file_orig # not used
   ## Are you sure?
+  echo "=============================================================================="
   if [ "$vc" = "git" ]; then
-      echo "=============================================================================="
       ( cd $PORTSDIR/$port_dir ; git status -s . )
-      echo "------------------------------------------------------------------------------"
-      cat $commit_file
-      echo "=============================================================================="
+  else
+    ( cd $PORTSDIR/$port_dir ; svn status . )
   fi
+  echo "------------------------------------------------------------------------------"
+  cat $commit_file
+  echo "=============================================================================="
 
   echo -n "Final Chance, are you sure? (YES to proceed) [NO]: "
   read ans
@@ -88,6 +89,12 @@ commit () {
       (
         cd $PORTSDIR/$port_dir
         $vc add -A .
+        $vc commit -F $commit_file
+      )
+  else
+      (
+        cd $PORTSDIR/$port_dir
+        $vc add --force .
         $vc commit -F $commit_file
       )
   fi
