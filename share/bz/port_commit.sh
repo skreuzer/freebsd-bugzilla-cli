@@ -23,7 +23,7 @@ commit () {
   ${ME} get -n $pr
 
   ## which vc
-  local vc=$(_svn_or_git)
+  local vc=$(_svn_or_git "ports")
 
   ## which port
   local d=$(_pr_dir $pr)
