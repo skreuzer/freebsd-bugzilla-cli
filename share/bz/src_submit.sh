@@ -30,7 +30,12 @@ _submit_bug () {
   local e=$(wc -l $template_file | awk '{ print $1 }')
   local description=$(tail -$(($e-$s-1)) $template_file)
 
-  local bug_id=$(backend_submit "$product" "$component" "$version" "$severity" "$hardware" "$os" "$description_file" "$title" $f_n)
+  local desc_file=$(mktemp -q /tmp/_bzsubmit-desc.txt.XXXXXX)
+  echo "$description" > $desc_file
+
+  local bug_id=$(backend_submit "$product" "$component" "$version" "$severity" "$hardware" "$os" "$desc_file" "$title" $f_n)
+
+  rm -f $desc_file
 
   echo $bug_id
 }

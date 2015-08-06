@@ -247,8 +247,9 @@ _description_get () {
   local port_dir=$1
   local title="$2"
   local f_n=$3
-  local desc_file=$4
-  local delta_file=$5
+  local delta_file=$4
+
+  local desc_file=$(mktemp -q /tmp/_bzsubmit-desc.txt.XXXXXX)
 
   if echo $title | grep -q "new"; then
     if [ ! -e $PORTSDIR/$port_dir/pkg-descr ]; then
@@ -266,6 +267,8 @@ _description_get () {
   fi
 
   _shameless_plug >> $desc_file
+
+  rm -f $desc_file
 
   echo $desc_file
 }
