@@ -12,9 +12,10 @@ inprog       - mark a pr in progress
 login        - login to bugzilla
 overto       - reassign a pr to someone
 patch        - patch a port
-search       - search prs
 port_commit  - COMMIT a pr [will be prompted]
 port_submit  - submit a pr with shar/patch for a port
+search       - search prs
+src_submit   - submit a pr with patch for src
 take         - assign a pr to yourself
 timeout      - comment on a pr stating maintainer and timeout duration
 top          - show top assignee / reporters
