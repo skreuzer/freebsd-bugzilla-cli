@@ -310,15 +310,19 @@ _days_since_action () {
   local d=$1
 
   local json=$(grep ^flags $d/pr | sed -e "s,^flags       :,,")
+  if [ -n "$json" ]; then
+    local created=$(_json_find_key_value "creation_date" "$json" 1)
+    local modified=$(_json_find_key_value "modification_date" "$json" 1)
+    local status=$(_json_find_key_value "status" "$json")
 
-  local created=$(_json_find_key_value "creation_date" "$json" 1)
-  local modified=$(_json_find_key_value "modification_date" "$json" 1)
-  local status=$(_json_find_key_value "status" "$json")
-
-  case $status in
-    "+") echo 0 ;;
-    *)   echo $(_days_since $created) ;;
-  esac
+    case $status in
+      "+") echo 0 ;;
+      *)   echo $(_days_since $created) ;;
+    esac
+  else
+    local reported=$(awk -F: '/^Reported/ { print $2 }' $d/pr | sed -e 's, ,,g' -e 's,T.*,,')
+    echo $(_days_since $reported)
+  fi
 }
 
 _json_find_key_value () {
