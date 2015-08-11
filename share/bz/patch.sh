@@ -23,15 +23,14 @@ bzpatch () {
   local is_shar=$(head -1 $d/patch | grep -c "# This is a shell archive.")
 
   if [ $is_shar -eq 1 ]; then
-    _bzpatch_shar $d $pr
+    _bzpatch_shar $d
   else
-    _bzpatch_patch $d $pr
+    _bzpatch_patch $d
   fi
 }
 
 _bzpatch_patch () {
   local d=$1
-  local pr=$2
 
   local port=$(_port_from_pr $d)
 
@@ -49,7 +48,6 @@ _bzpatch_patch () {
 
 _bzpatch_shar () {
   local d=$1
-  local pr=$2
 
   local port=$(_port_from_pr $d)
 
