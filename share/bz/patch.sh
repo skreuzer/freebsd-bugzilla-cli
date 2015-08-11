@@ -40,7 +40,9 @@ _bzpatch_patch () {
   if grep -q ^diff $d/patch; then
     p="-p$(($l/2))"
   else
-    p="-p$l"
+    if [ -n "$l" -a -n "$port" ]; then
+      p="-p$l"
+    fi
   fi
 
   (cd $PORTSDIR/$port ; patch $p < $d/patch)
