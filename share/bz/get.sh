@@ -25,6 +25,8 @@ get () {
   get_pr $d $pr
 
   [ $f_a -eq 1 ] && get_attachment $d $pr
+
+  echo "----> $d"
 }
 
 get_pr () {
