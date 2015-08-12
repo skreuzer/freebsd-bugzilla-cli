@@ -1,6 +1,6 @@
 usage () {
   cat <<EOF
-Usage: bz search [-a assigned_to] [-c component] [-H hardware] [-p product] [-r reported_by] \
+Usage: bz search [-a assigned_to] [-c component] [-H hardware] [-p product] [-r reported_by] \\
                  [-R resolution ] [-s state] [-S severity] [-v version]
        bz search [-A|-DPB] .....
        bz search -h
