@@ -13,7 +13,7 @@ Optional:
     -c    -- component pr is in
     -h    -- this help message
     -p    -- product pr is in
-    -r    -- email addree that reported pr
+    -r    -- email address that reported pr
     -s    -- state of pr
     -v    -- only prs affecting this version
 
