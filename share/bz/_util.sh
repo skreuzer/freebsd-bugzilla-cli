@@ -353,6 +353,7 @@ _field_changed () {
   fi
 }
 
+## on file modification, caller must rm file who's path is returned
 _run_editor () {
   local file=$1
   local output="$2"
