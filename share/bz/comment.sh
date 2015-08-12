@@ -22,13 +22,14 @@ comment() {
   local comment_file=$(mktemp -q /tmp/_bz-comment.txt.XXXXXX)
   if [ -n "$comment" ]; then
     echo "$comment" > $comment_file
+    backend_comment $pr "$comment_file"
   else
     local comment_file_orig=$(_run_editor $comment_file /dev/tty)
-    rm -f $comment_file_orig # not used
+    if [ -n "$comment_file_orig" ]; then
+      backend_comment $pr $comment_file
+      rm -f $comment_file_orig
+    fi
   fi
-
-  backend_comment $pr $comment_file
-
   rm -f $comment_file
 }
 
