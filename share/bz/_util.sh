@@ -1,4 +1,4 @@
-bugz=bugz
+bugz="bugz --connection FreeBSD"
 
 _pr_dir () {
   local pr=$1
