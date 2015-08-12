@@ -5,7 +5,7 @@ backend_close () {
   local comment_file="$2"
 
   if [ -n "$(cat $comment_file)" ]; then
-      $bugz modify -s "Closed" -r "FIXED" --coment-from $comment_file $pr
+      $bugz modify -s "Closed" -r "FIXED" --comment-from $comment_file $pr
   else
     $bugz modify -s "Closed" -r "FIXED" $pr
   fi
