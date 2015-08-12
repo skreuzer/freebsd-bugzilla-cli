@@ -12,9 +12,11 @@ backend_get_attachment () {
   local a_cnt=$(grep ^Attachments $d/pr | cut -d: -f2 | sed -e 's, ,,g')
 
   if [ $a_cnt -gt 0 ]; then
-      local id=$(
-        grep "\[Attachment\]" $d/pr | \
-            egrep -i 'shar|diff|patch|shell|update' | \
+      local attachment_lines=$(grep "\[Attachment\]" $d/pr)
+      if [ $a_cnt -ne 1 ]; then
+        attachment_lines=$(echo $attachment_lines | egrep -i 'shar|diff|patch|shell|update')
+      fi
+      local id=$(echo $attachment_lines | \
             awk '{ print $2 }' | \
             sed -e 's,\[,,' -e 's,\],,' | \
             sort -n | \
