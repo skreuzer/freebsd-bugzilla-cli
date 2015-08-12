@@ -8,7 +8,7 @@ backend_init () {
 [default]
 connection=FreeBSD
 
-[FBSD]
+[FreeBSD]
 base=$url
 user=$user
 password=$password
