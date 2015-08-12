@@ -2,6 +2,7 @@ if [ -n "$1" ]; then
   ${ME} $1 -h
 else
   cat <<EOF
+attach       - attach a file to a pr
 close        - close a pr
 comment      - comment on a pr
 get          - get a pr locally
