@@ -27,7 +27,7 @@ close () {
       local comment_file_orig=$(_run_editor $comment_file /dev/tty)
       rm -f $comment_file_orig # not used
   else
-    [ -z "$comment" ] && echo "$comment" > $comment_file
+    [ -n "$comment" ] && echo "$comment" > $comment_file
   fi
 
   if [ -n "$(cat $comment_file)" ]; then
