@@ -3,7 +3,8 @@ backend_init () {
   local user=$2
   local pass=$3
 
-    cat <<EOF > $HOME/.bugzrc
+  umask 177
+  cat <<EOF > $HOME/.bugzrc
 [default]
 connection=FreeBSD
 
