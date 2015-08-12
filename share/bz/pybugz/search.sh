@@ -19,7 +19,7 @@ backend_search () {
   _build_search_file "$search_file" "$component"   "--component"
   _build_search_file "$search_file" "$hardware"    "--hardware"
   _build_search_file "$search_file" "$product"     "--product"
-  _build_search_file "$search_file" "$reporter"    "--reporter"
+  _build_search_file "$search_file" "$reporter"    "-r"
   _build_search_file "$search_file" "$resolution"  "--resolution"
   _build_search_file "$search_file" "$state"       "--status"
   _build_search_file "$search_file" "$severity"    "--severity"
