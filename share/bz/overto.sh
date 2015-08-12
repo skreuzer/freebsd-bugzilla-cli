@@ -18,11 +18,11 @@ EOF
 
 overto () {
   local pr=$1
-  local comment=$2
-  local state=$3
+  local comment="$2"
+  local state="$3"
   local who=$4
 
-  backend_overto $who "$comment" "$state" $pr
+  backend_overto $pr "$comment" "$state" $who
 }
 
 . ${BZ_BACKENDDIR}/overto.sh
