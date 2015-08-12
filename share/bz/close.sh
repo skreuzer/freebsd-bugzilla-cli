@@ -1,7 +1,7 @@
 usage () {
   cat <<EOF
 Usage: bz close [-c comment | -e] pr
-       bz take -h
+       bz close -h
 
 Options:
     -c    -- optional comment (default none)
@@ -22,19 +22,22 @@ close () {
   local f_e=$2
   local comment="$3"
 
-  local comment_file=$(mktemp -q /tmp/_bz-comment.txt.XXXXXX)
-  if [ $f_e -eq 1 ]; then
+  if [ -n "$comment" ]; then
+    local comment_file=$(mktemp -q /tmp/_bz-comment.txt.XXXXXX)
+    echo "$comment" > $comment_file
+    backend_close $pr "$comment_file"
+    rm -f $comment_file
+  elif [ $f_e -eq 1 ]; then
+      local comment_file=$(mktemp -q /tmp/_bz-comment.txt.XXXXXX)
       local comment_file_orig=$(_run_editor $comment_file /dev/tty)
-      rm -f $comment_file_orig # not used
+      if [ -n "$comment_file_orig" ]; then
+        backend_close $pr $comment_file
+        rm -f $comment_file_orig
+      fi
+      rm -f $comment_file
   else
-    [ -n "$comment" ] && echo "$comment" > $comment_file
+    backend_close $pr /nonexistent
   fi
-
-  if [ -z "$comment" -o \( -n "$(cat $comment_file)" -a $f_e -eq 1 \) ]; then
-    backend_close $pr $comment_file
-  fi
-
-  rm -f $comment_file
 }
 
 . ${BZ_SCRIPTDIR}/_util.sh
@@ -42,8 +45,11 @@ close () {
 
 comment=
 f_e=0
-while getopts c:eh FLAG; do
+while getopts CFMc:eh FLAG; do
   case ${FLAG} in
+    C) comment="Committed. Thanks!" ;;
+    F) comment="Committed with major changes. Thanks!" ;;
+    M) comment="Committed with minor changes. Thanks!" ;;
     c) comment="$OPTARG" ;;
     e) f_e=1 ;;
     h) usage ;;
