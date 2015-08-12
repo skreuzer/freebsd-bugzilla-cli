@@ -15,6 +15,7 @@ patch        - patch a port
 port_commit  - COMMIT a pr [will be prompted]
 port_submit  - submit a pr with shar/patch for a port
 search       - search prs
+show         - display a pr and primary attachment to STDOUT
 src_submit   - submit a pr with patch for src
 take         - assign a pr to yourself
 timeout      - comment on a pr stating maintainer and timeout duration

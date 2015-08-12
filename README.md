@@ -40,6 +40,7 @@ All subcommands support -h for help
 - bz search
 - bz take
 - bz inprog
+- bz show
 - bz comment
 - bz edit
 - bz get
@@ -54,6 +55,8 @@ All subcommands support -h for help
 - bz blocks
 - bz depends
 - bz duplicates
+- bz claim
+- bz stalk
 
 # Implimenting a New Backen
 ```sh
