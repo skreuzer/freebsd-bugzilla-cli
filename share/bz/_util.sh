@@ -365,6 +365,7 @@ _run_editor () {
   if ! cmp -s $file $temp_orig; then
     echo $temp_orig
   else
+    rm -f $temp_orig
     echo ""
   fi
 }
