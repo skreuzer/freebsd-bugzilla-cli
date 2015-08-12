@@ -18,6 +18,8 @@ EOF
 bzpatch () {
   local pr=$1
 
+  ${ME} get $pr
+
   local d=$(_pr_dir $pr)
 
   local is_shar=$(head -1 $d/patch | grep -c "# This is a shell archive.")
