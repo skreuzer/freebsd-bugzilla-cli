@@ -83,10 +83,10 @@ submit () {
   _build_template > $template_file
 
   local errors=-1
-  local template_file_orig=
   while [ $errors -ne 0 ]; do
     errors=0
-    template_file_orig=$(_run_editor $template_file /dev/tty)
+    local template_file_orig=$(_run_editor $template_file /dev/tty)
+    [ -n "$template_file_orig" ] && rm -f $template_file_orig # not used
 
     local title=$(grep ^Title           $template_file | cut -d: -f 2- | sed -e 's,^ *,,' -e 's, *$,,')
     local assignedto=$(grep ^AssignedTo $template_file | cut -d: -f 2- | sed -e 's,^ *,,' -e 's, *$,,')
@@ -119,7 +119,7 @@ submit () {
     _submit_patch $bug_id $f_n $delta_file
   fi
 
-  rm -f $template_file $template_file_orig
+  rm -f $template_file
 }
 
 . ${BZ_SCRIPTDIR}/_util.sh

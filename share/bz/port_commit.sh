@@ -65,7 +65,8 @@ commit () {
   fi
 
   local commit_file_orig=$(_run_editor $commit_file /dev/tty)
-  rm -f $commit_file_orig # not used
+  [ -n "$commit_file_oritg" ] && rm -f $commit_file_orig # not used
+
   ## Are you sure?
   echo "=============================================================================="
   if [ "$vc" = "git" ]; then

@@ -262,7 +262,7 @@ _description_get () {
 
     if [ $f_n -ne 1 ]; then
       local desc_file_orig=$(_run_editor $desc_file /dev/tty)
-      rm -f $desc_file_orig # not used
+      [ -n "$desc_file_orig" ] && rm -f $desc_file_orig # not used
     fi
   fi
 

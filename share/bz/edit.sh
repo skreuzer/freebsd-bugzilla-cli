@@ -71,9 +71,10 @@ edit () {
 
       backend_edit $pr $f_n "$assigned_to" "$component" "$hardware" "$product" \
                    "$resolution" "$state" "$severity" "$title" "$version" "$comment"
+      rm -f $scratch_file_orig
   fi
 
-  rm -f $scratch_file $scratch_file_orig
+  rm -f $scratch_file
 }
 
 . ${BZ_BACKENDDIR}/edit.sh
