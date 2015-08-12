@@ -30,7 +30,7 @@ close () {
     [ -n "$comment" ] && echo "$comment" > $comment_file
   fi
 
-  if [ -n "$(cat $comment_file)" ]; then
+  if [ -z "$comment" -o \( -n "$(cat $comment_file)" -a $f_e -eq 1 \) ]; then
     backend_close $pr $comment_file
   fi
 
