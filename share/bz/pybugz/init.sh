@@ -5,7 +5,7 @@ backend_init () {
 
     cat <<EOF > $HOME/.bugzrc
 [default]
-connection=FBSD
+connection=FreeBSD
 
 [FBSD]
 base=$url
