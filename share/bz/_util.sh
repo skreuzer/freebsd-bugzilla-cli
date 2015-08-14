@@ -340,6 +340,20 @@ _json_find_key_value () {
   fi
 }
 
+_days_since_commit () {
+  local committer=$1
+
+  local vc=$(_svn_or_git "ports")
+  local dt
+  if [ "$vc" = "$svn" ]; then
+    dt=$(svn log | awk -F\| -v c="$committer" '$2~c { print $3 }' | head -1 | sed -e 's,^ ,,' -e 's, .*,,' -e 's,-,,g')
+  else
+    dt=$(git log --pretty=format:"%cd" --author=$committer --date=short -1 | sed -e 's,-,,g')
+  fi
+
+  echo $(_days_since $dt)
+}
+
 _field_changed () {
   local field=$1
   local orig_file=$2
