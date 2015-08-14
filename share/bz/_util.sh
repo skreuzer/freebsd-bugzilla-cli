@@ -384,3 +384,35 @@ _run_editor () {
     echo ""
   fi
 }
+
+_teams () {
+
+cat <<EOF
+apache
+autotools
+chromium
+emulation
+enlightenment
+fortran
+freebsd-fpc
+gecko
+gnome
+haskell
+java
+kde
+mono
+multimedia
+office
+pgsql
+pkg
+portmgr
+ports
+ports-secteam
+python
+ruby
+vbox
+x11
+zope
+perl
+EOF
+}
