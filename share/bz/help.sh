@@ -3,6 +3,7 @@ if [ -n "$1" ]; then
 else
   cat <<EOF
 attach       - attach a file to a pr
+claim        - take all unassigned prs from a submitter
 close        - close a pr
 comment      - comment on a pr
 get          - get a pr locally
