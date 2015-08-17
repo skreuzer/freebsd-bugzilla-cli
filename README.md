@@ -50,12 +50,12 @@ All subcommands support -h for help
 - bz overto
 - bz timeout
 - bz top
+- bz claim
 
 # Future
 - bz blocks
 - bz depends
 - bz duplicates
-- bz claim
 - bz stalk
 
 # Implimenting a New Backend
