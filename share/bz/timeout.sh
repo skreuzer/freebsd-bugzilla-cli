@@ -22,10 +22,10 @@ timeout () {
   local d=$(_pr_dir $pr)
   local port_dir=$(_port_from_pr $d)
 
-  local days=$(_days_since_action $d)
-  if [ $days -gt 16 ]; then
-    local maintainer=$(cd $PORTSDIR/$port_dir ; make -V MAINTAINER)
-    local comment="maintainer timeout ($maintainer ; $days days)"
+  ${ME} get $pr
+  local comment="$(_timed_out_str $d $port_dir)"
+
+  if [ -n "$comment" ]; then
     backend_timeout $pr "$comment"
   fi
 }

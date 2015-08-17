@@ -157,6 +157,23 @@ _uses_str () {
   echo $str
 }
 
+_assignee_from_pr () {
+  local d=$1
+
+  local assignee=$(grep ^AssignedTo $d/pr | cut -d: -f 2- | sed -e 's,^ *,,' -e 's, *$,,')
+
+  echo $assignee
+}
+
+_requestee_from_pr () {
+  local d=$1
+
+  local json=$(grep ^flags $d/pr | sed -e "s,^flags       :,,")
+  local requestee=$(_json_find_key_value "requestee" "$json")
+
+  echo $requestee
+}
+
 _submitter_from_pr () {
   local d=$1
 
@@ -306,25 +323,6 @@ _days_since () {
   echo $days
 }
 
-_days_since_action () {
-  local d=$1
-
-  local json=$(grep ^flags $d/pr | sed -e "s,^flags       :,,")
-  if [ -n "$json" ]; then
-    local created=$(_json_find_key_value "creation_date" "$json" 1)
-    local modified=$(_json_find_key_value "modification_date" "$json" 1)
-    local status=$(_json_find_key_value "status" "$json")
-
-    case $status in
-      "+") echo 0 ;;
-      *)   echo $(_days_since $created) ;;
-    esac
-  else
-    local reported=$(awk -F: '/^Reported/ { print $2 }' $d/pr | sed -e 's, ,,g' -e 's,T.*,,')
-    echo $(_days_since $reported)
-  fi
-}
-
 _json_find_key_value () {
   local key=$1
   local json="$2"
@@ -342,6 +340,11 @@ _json_find_key_value () {
 
 _days_since_commit () {
   local committer=$1
+
+  if _committer_is_team $committer; then
+    echo ""
+    return
+  fi
 
   local vc=$(_svn_or_git "ports")
   local dt
@@ -382,6 +385,75 @@ _run_editor () {
   else
     rm -f $temp_orig
     echo ""
+  fi
+}
+
+_timed_out_str () {
+  local d=$1
+  local port_dir=$2
+
+  if egrep -q "(maintainer|committer|submitter) timeout \(" $d/pr; then
+    echo ""
+    return
+  fi
+
+  local submitter=$(_submitter_from_pr $d | sed -e 's,@FreeBSD.org,,')
+  local requestee=$(_requestee_from_pr $d | sed -e 's,@FreeBSD.org,,')
+  local assignee=$(_assignee_from_pr $d   | sed -e 's,@FreeBSD.org,,')
+
+  local json=$(grep ^flags $d/pr | sed -e "s,^flags       :,,")
+  local day
+  local who
+  local str
+  if [ -n "$json" ]; then
+    local created=$(_json_find_key_value "creation_date" "$json" 1)
+    local modified=$(_json_find_key_value "modification_date" "$json" 1)
+    local status=$(_json_find_key_value "status" "$json")
+
+    case $status in
+      "-")
+        days=$(_days_since $modified)
+        who=$submitter
+        str="submitter timeout ($submitter ; $days days"
+        ;;
+      "+")
+        days=$(_days_since $modified)
+        who=$assignee
+        str="committer timeout ($assignee ; $days days"
+        ;;
+      "?")
+        days=$(_days_since $created)
+        who=$requestee
+        str="maintainer timeout ($requestee ; $days days"
+        ;;
+    esac
+  else
+    local reported=$(awk -F: '/^Reported/ { print $2 }' $d/pr | sed -e 's, ,,g' -e 's,T.*,,')
+    days=$(_days_since $reported)
+    who=$assignee
+    str="committer timeout ($assignee ; $days days"
+  fi
+
+  if [ $days -gt 16 ]; then
+    if ! echo $who | grep -q '@'; then
+      local cdays=$(_days_since_commit $who)
+       [ -n "$cdays" ]  && str="$str ; last commit $cdays days ago"
+    fi
+    str="$str)"
+    echo "$str"
+  fi
+}
+
+_committer_is_team () {
+  local committer=$1
+
+  local regex=$(_teams | xargs | sed -e 's, ,$|^,g')
+  regex="^$regex\$"
+
+  if echo $committer | egrep -q "$regex"; then
+    return 0
+  else
+    return 1
   fi
 }
 
