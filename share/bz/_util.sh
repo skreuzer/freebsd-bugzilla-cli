@@ -201,7 +201,7 @@ _comment_from_pr () {
 _timeout_from_pr () {
   local d=$1
 
-  local timeout_str=$(grep ^"maintainer timeout (.* ; .* days)" $d/pr)
+  local timeout_str=$(egrep ^"(maintainer|submitter|committer) timeout \(" $d/pr)
 
   echo "$timeout_str"
 }
