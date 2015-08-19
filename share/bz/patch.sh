@@ -1,13 +1,14 @@
 usage () {
   cat <<EOF
-Usage: bz patch pr
+Usage: bz patch pr [attachment]
        bz patch -h
 
 Options:
     -h    -- this help message
 
 Args:
-    pr    -- pr number
+    pr         -- pr number
+    attachment -- optionl attachment to forcibly use as patch
 
 Will apply the patch to the port in $PORTSDIR.
 EOF
@@ -17,8 +18,9 @@ EOF
 
 bzpatch () {
   local pr=$1
+  local attachid=$2
 
-  ${ME} get $pr
+  ${ME} -x get $pr $attachid
 
   local d=$(_pr_dir $pr)
 
@@ -80,5 +82,6 @@ done
 shift $(($OPTIND-1))
 
 pr=$1
+attachid=$2
 
-bzpatch $pr
+bzpatch $pr $attachid
