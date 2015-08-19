@@ -17,6 +17,7 @@ backend_get_attachment () {
   elif [ $a_cnt -gt 0 ]; then
       local id=$(grep "\[Attachment\]" $d/pr | \
             egrep -i 'shar|diff|patch|shell|update' | \
+            grep -v 'poudriere' | \
             awk '{ print $2 }' | \
             sed -e 's,\[,,' -e 's,\],,' | \
             sort -n | \
