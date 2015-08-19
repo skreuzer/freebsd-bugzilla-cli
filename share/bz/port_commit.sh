@@ -143,21 +143,22 @@ _preview_commit () {
   local commit_file=$3
 
   echo "=============================================================================="
-  echo "-------------------------------ADD/DELETE/CHANGED-----------------------------"
-  if [ "$vc" = "git" ]; then
-    ( cd $PORTSDIR/$port_dir ; git status -s . )
-  else
-    ( cd $PORTSDIR/$port_dir ; svn status . )
-  fi
   echo "---------------------------------DIFF-----------------------------------------"
   if [ "$vc" = "git" ]; then
     ( cd $PORTSDIR/$port_dir ; git diff HEAD . )
   else
     ( cd $PORTSDIR/$port_dir ; svn diff . )
   fi
+  echo "-------------------------------ADD/DELETE/CHANGED-----------------------------"
+  if [ "$vc" = "git" ]; then
+    ( cd $PORTSDIR/$port_dir ; git status -s . )
+  else
+    ( cd $PORTSDIR/$port_dir ; svn status . )
+  fi
   echo "------------------------------COMMIT MESSAGE----------------------------------"
   cat $commit_file
   echo "=============================================================================="
+  echo
 }
 
 _confirm () {
