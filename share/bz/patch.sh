@@ -1,10 +1,11 @@
 usage () {
   cat <<EOF
-Usage: bz patch pr [attachment]
+Usage: bz patch [-m] pr [attachment]
        bz patch -h
 
 Options:
     -h    -- this help message
+    -m    -- multiple ports, assume patch relative to PORTSDIR
 
 Args:
     pr         -- pr number
@@ -19,8 +20,9 @@ EOF
 bzpatch () {
   local pr=$1
   local attachid=$2
+  local f_m=$3
 
-  ${ME} -x get $pr $attachid
+  ${ME} get $pr $attachid
 
   local d=$(_pr_dir $pr)
 
@@ -29,14 +31,13 @@ bzpatch () {
   if [ $is_shar -eq 1 ]; then
     _bzpatch_shar $d
   else
-    _bzpatch_patch $d
+    _bzpatch_patch $d $f_m
   fi
 }
 
 _bzpatch_patch () {
   local d=$1
-
-  local port=$(_port_from_pr $d)
+  local f_m=$2
 
   local l=$(egrep "^Index:|^diff |^--- " $d/patch | head -1 | awk '{ print gsub(/\//,"") }')
   local p
@@ -49,7 +50,12 @@ _bzpatch_patch () {
     fi
   fi
 
-  (cd $PORTSDIR/$port ; patch $p < $d/patch)
+  if [ $f_m -eq 1 ]; then
+    (cd $PORTSDIR ; patch $p < $d/patch)
+  else
+    local port=$(_port_from_pr $d)
+    (cd $PORTSDIR/$port ; patch $p < $d/patch)
+  fi
 }
 
 _bzpatch_shar () {
@@ -74,9 +80,11 @@ _bzpatch_shar () {
 
 # XXX: no backend needed
 
-while getopts h FLAG; do
+f_m=0
+while getopts hm FLAG; do
   case ${FLAG} in
     h) usage ;;
+    m) f_m=1 ;;
   esac
 done
 shift $(($OPTIND-1))
@@ -84,4 +92,4 @@ shift $(($OPTIND-1))
 pr=$1
 attachid=$2
 
-bzpatch $pr $attachid
+bzpatch $pr "$attachid" $f_m
