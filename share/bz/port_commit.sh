@@ -209,7 +209,6 @@ _post_doit () {
   (
     cd $PORTSDIR/$port_dir
     for file in $(echo $newfiles); do
-      echo "file=[$file]"
       if [ x"$file" = x"Makefile" ]; then
         git svn propset svn:keywords "FreeBSD=%H" $file
       else
