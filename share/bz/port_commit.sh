@@ -36,7 +36,7 @@ commit () {
   ## cleanup port_dir
   _clean_port_dir $port_dir
   _remove_empty_files $port_dir $vc
-  _add_new_files $port_dir $vc
+  local newfiles=$(_add_new_files $port_dir $vc)
 
   ## Are you sure?
   _preview_commit $vc $port_dir $commit_file
@@ -46,6 +46,9 @@ commit () {
 
   ## Do it!
   _doit $f_n $vc $port_dir $commit_file
+
+  ## Post Do it
+  _post_doit $vc $port_dir $newfiles
 
   ## cleanup
   [ $f_n -eq 0 -a $f_c -eq 1 ] && ${ME} close $pr
@@ -131,10 +134,14 @@ _add_new_files () {
   local port_dir=$1
   local vc=$2
 
+  local newfiles
   if [ "$vc" = "git" ]; then
     ( cd $PORTSDIR/$port_dir ; git add -A . )
+    newfiles=$( cd $PORTSDIR/$port_dir ; git status -s . | awk '/^A / { print $2 }' )
   else
   fi
+
+  echo "$newfiles"
 }
 
 _preview_commit () {
@@ -189,6 +196,26 @@ _doit () {
       $vc add --force .
       $vc commit -F $commit_file
     fi
+  )
+}
+
+_post_doit () {
+  local vc=$1
+  local port_dir=$2
+  local newfiles="$3"
+
+  [ "$vc" != "git" ] && return
+
+  (
+    cd $PORTSDIR/$port_dir
+    for file in $(echo $newfiles); do
+      echo "file=[$file]"
+      if [ x"$file" = x"Makefile" ]; then
+        git svn propset svn:keywords "FreeBSD=%H" $file
+      else
+        git svn propset fbsd:nokeywords yes $file
+      fi
+    done
   )
 }
 
