@@ -41,6 +41,11 @@ close () {
   else
     backend_close $pr /nonexistent
   fi
+
+  local d=$(_pr_dir $pr)
+  local port_dir=$(_port_from_pr $d)
+  (cd $PORTSDIR/$port_dir ; find . -name ".gitattributes" -delete)
+  rm -rf $d
 }
 
 . ${BZ_SCRIPTDIR}/_util.sh
