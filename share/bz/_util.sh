@@ -271,14 +271,15 @@ _append_desc () {
   local desc_file=$1
   local str="$2"
 
-  [ x"$str" != x"" ] && echo "$str" >> $desc_file
+  if [ x"$str" != x"" ]; then
+    echo "$str" >> $desc_file
+  fi
 }
 
 _description_get () {
   local port_dir=$1
   local title="$2"
-  local f_n=$3
-  local delta_file=$4
+  local delta_file=$3
 
   local desc_file=$(mktemp -q /tmp/_bzsubmit-desc.txt.XXXXXX)
 
@@ -291,32 +292,28 @@ _description_get () {
   else
     _build_desc_file $desc_file $delta_file "$title"
 
-    if [ $f_n -ne 1 ]; then
-      local desc_file_orig=$(_run_editor $desc_file /dev/tty)
-      [ -n "$desc_file_orig" ] && rm -f $desc_file_orig # not used
-    fi
+    local desc_file_orig=$(_run_editor $desc_file /dev/tty)
+    [ -n "$desc_file_orig" ] && rm -f $desc_file_orig # not used
   fi
 
   _shameless_plug >> $desc_file
-
-  rm -f $desc_file
 
   echo $desc_file
 }
 
 _build_desc_file () {
-  local desc_file=$1
-  local delta_file=$2
-  local title="$3"
+   local desc_file=$1
+   local delta_file=$2
+   local title="$3"
 
-  echo "$title" | sed -e 's,.*:,,' -e 's/ , /: /' >> $desc_file
-  echo >> $desc_file
-  _append_desc $desc_file "$(_update_str       $delta_file "- ")"
-  _append_desc $desc_file "$(_maintainer_str   $delta_file "- ")"
-  _append_desc $desc_file "$(_portrevision_str $delta_file "- ")"
-  _append_desc $desc_file "$(_license_str      $delta_file "- ")"
-  _append_desc $desc_file "$(_uses_str         $delta_file "- ")"
-  _append_desc $desc_file "$(_noarch_str       $delta_file "- ")"
+   echo "$title" | sed -e 's,.*:,,' -e 's/ , /: /' >> $desc_file
+   echo >> $desc_file
+   _append_desc $desc_file "$(_update_str       $delta_file "- ")"
+   _append_desc $desc_file "$(_maintainer_str   $delta_file "- ")"
+   _append_desc $desc_file "$(_portrevision_str $delta_file "- ")"
+   _append_desc $desc_file "$(_license_str      $delta_file "- ")"
+   _append_desc $desc_file "$(_uses_str         $delta_file "- ")"
+   _append_desc $desc_file "$(_noarch_str       $delta_file "- ")"
 }
 
 _shameless_plug () {
