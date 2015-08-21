@@ -147,7 +147,7 @@ _add_new_files () {
   local newfiles
   if [ "$vc" = "git" ]; then
     ( cd $PORTSDIR/$port_dir ; git add -A . )
-    newfiles=$( cd $PORTSDIR/$port_dir ; git status -s . | awk '/^A / { print $2 }' )
+    newfiles=$( cd $PORTSDIR/$port_dir ; git status -s . | awk '/^[AR] / { print $2 }' )
   else
   fi
 
