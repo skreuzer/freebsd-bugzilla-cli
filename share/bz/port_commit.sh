@@ -134,7 +134,7 @@ _remove_empty_files () {
   local vc=$2
 
   if [ "$vc" = "git" ]; then
-    ( cd $PORTSDIR/$port_dir ; find . -type f -empty | egrep -v 'misc/freebsd-doc-|devel/linux-c6-qt47' | xargs git rm -f )
+    ( cd $PORTSDIR/$port_dir ; find . -type f -empty | xargs git rm -f )
   else
     ( cd $PORTSDIR/$port_dir ; find . -type f -empty | xargs svn rm -f  )
   fi
@@ -149,6 +149,8 @@ _add_new_files () {
     ( cd $PORTSDIR/$port_dir ; git add -A . )
     newfiles=$( cd $PORTSDIR/$port_dir ; git status -s . | awk '/^[AR] / { print $2 }' )
   else
+    ( cd $PORTSDIR/$port_dir ; svn add --force . )
+     newfiles=$( cd $PORTSDIR/$port_dir ; svn stauts .   | awk '/^[AR] / { print $NF }' )
   fi
 
   echo "$newfiles"
@@ -204,7 +206,6 @@ _doit () {
     if [ "$vc" = "git" ]; then
       $vc commit -F $commit_file
     else
-      $vc add --force .
       $vc commit -F $commit_file
     fi
   )
