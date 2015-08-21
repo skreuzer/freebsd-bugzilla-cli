@@ -234,7 +234,7 @@ _post_doit () {
 f_c=0
 f_m=0
 f_n=0
-while getopts chn FLAG; do
+while getopts chmn FLAG; do
   case ${FLAG} in
     c) f_c=1 ;;
     m) f_m=1 ;;
