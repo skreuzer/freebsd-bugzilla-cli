@@ -56,8 +56,12 @@ bzinit () {
   read assigned_to
   [ -z "$assigned_to" ] && assigned_to=$email
 
+  echo -n "Port Commit: space seperated list of your hats [none]: "
+  read hats
+
   cat <<EOF > $HOME/.fbcrc
 REPORTER=$email
+hats="$hats"
 product="$product"
 state="$state"
 assigned_to="$assigned_to"

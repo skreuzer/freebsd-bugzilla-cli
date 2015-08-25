@@ -68,10 +68,12 @@ _make_commit_msg () {
   local submitter
   local submitter_short
   local maintainer
+  local maintainer_short
 
   [ -n "$port_dir" ] && submitter=$(_submitter_from_pr $d)
   [ -n "$port_dir" ] && submitter_short=$(echo $submitter | sed -e 's,FreeBSD.org,,i')
   [ -n "$port_dir" ] && maintainer=$(_maintainer_from_port $port_dir)
+  [ -n "$port_dir" ] && maintainer_short=$(echo $maintainer | sed -e 's,FreeBSD.org,,i')
 
   . $HOME/.fbcrc
 
@@ -104,6 +106,11 @@ _make_commit_msg () {
         fi
       fi
     fi
+  fi
+
+  local hats_regex=$(echo $hats | sed -e 's, ,$|^,g' -e 's,^,^,' -e 's,$,\$,')
+  if  echo $maintainer_short | egrep "$hats_regex" ; then
+    echo "With Hat:            $maintainer_short"
   fi
 
   if [ -n "$SPONSORED_BY" ]; then
