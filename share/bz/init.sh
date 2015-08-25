@@ -27,15 +27,11 @@ bzinit () {
   local email
   local password
 
-  echo -n "FreeBSD Bugzilla User [$USER]: "
+  echo -n "Login: FreeBSD Bugzilla User [$USER]: "
   read user
   [ -z "$user" ] && user=$USER
 
-  echo -n "E-Mail to use for submissions [$USER@FreeBSD.org]: "
-  read email
-  [ -z "$email" ] && email="$USER@FreeBSD.org"
-
-  echo -n "FreeBSD Bugzilla Password: "
+  echo -n "Login: FreeBSD Bugzilla Password: "
   stty -echo
   trap 'stty echo' EXIT
   read password
@@ -43,6 +39,10 @@ bzinit () {
   trap - EXIT
   echo
   [ -z "$password" ] && echo "Blank Password." && exit 1
+
+  echo -n "Submit: E-Mail to use for submissions [$USER@FreeBSD.org]: "
+  read email
+  [ -z "$email" ] && email="$USER@FreeBSD.org"
 
   echo -n "Search: Default Product [Ports & Packages]: "
   read product
