@@ -42,7 +42,7 @@ get_attachment () {
   local d=$1
   local attachid=$2
 
-  backend_get_attachment $d $attachid > $d/patch
+  backend_get_attachment $d $attachid
 }
 
 . ${BZ_BACKENDDIR}/get.sh
