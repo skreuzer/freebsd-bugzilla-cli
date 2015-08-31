@@ -46,7 +46,7 @@ commit () {
   _preview_commit $vc "$port_dir" $commit_file
 
   ## Proceed?
-  _confirm $commit_file
+  _confirm $vc $commit_file
 
   ## Do it!
   _doit $f_n $vc "$port_dir" $commit_file
@@ -189,13 +189,19 @@ _preview_commit () {
 }
 
 _confirm () {
-  local commit_file=$1
+  local vc=$1
+  local commit_file=$2
 
   local ans
   echo -n "Final chance, are you sure? (YES to proceed) [NO]: "
   read ans
   if [ x"$ans" != x"YES" ]; then
     rm -f $commit_file
+    if [ "$vc" = "git" ]; then
+      git reset HEAD^
+    else
+      # svn
+    fi
     echo "Bailing out"
     exit 1
   fi
