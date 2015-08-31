@@ -101,7 +101,8 @@ _make_commit_msg () {
       if [ -n "$timeout_str" ]; then
         echo "Approved by:         $timeout_str" >> $commit_file
       else
-        if [ "$maintainer" != "ports@FreeBSD.org" ]; then
+        _is_team $maintainer
+        if [ $? -eq 0 -a "$maintainer" != "ports@FreeBSD.org" ]; then
           echo "Approved by:         $maintainer (maintainer)" >> $commit_file
         fi
       fi
