@@ -110,8 +110,8 @@ _make_commit_msg () {
   fi
 
   local hats_regex=$(echo $hats | sed -e 's, ,$|^,g' -e 's,^,^,' -e 's,$,\$,')
-  if  echo $maintainer_short | egrep "$hats_regex" ; then
-    echo "With Hat:            $maintainer_short"
+  if  echo $maintainer_short | sed -e 's,\@,,' | egrep "$hats_regex" ; then
+    echo "With Hat:            $maintainer_short" >> $commit_file
   fi
 
   if [ -n "$SPONSORED_BY" ]; then
