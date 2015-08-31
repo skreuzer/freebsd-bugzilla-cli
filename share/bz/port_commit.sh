@@ -125,16 +125,7 @@ _make_commit_msg () {
 _clean_port_dir () {
   local port_dir=$1
 
-  (
-    cd $PORTSDIR/$port_dir
-    find . \
-           \( -type f -o -type l \) -a \
-           \( -name "*.bak" -o -name "*~" -o -name ".\#*" -o -name "\#*" \
-                 -o -name "*.rej" -o -name "svn-commit.*" -o -name "*.orig" \
-                 -o -name "*.tmp" -o -name "=~+*" \
-           \) \
-           -print -exec rm -f "{}" \;
-  )
+  ( cd $PORTSDIR/$port_dir ; _clean_files )
 }
 
 _remove_empty_files () {

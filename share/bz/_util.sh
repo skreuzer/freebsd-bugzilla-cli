@@ -455,17 +455,29 @@ _timed_out_str () {
   fi
 }
 
-_committer_is_team () {
-  local committer=$1
+_is_team () {
+  local person=$1
 
   local regex=$(_teams | xargs | sed -e 's, ,$|^,g')
   regex="^$regex\$"
 
-  if echo $committer | egrep -q "$regex"; then
+  if echo $person | egrep -q "$regex"; then
     return 0
   else
     return 1
   fi
+}
+
+## note, caller must cd in a subshell
+_clean_files () {
+
+  find . \
+       \( -type f -o -type l \) -a \
+       \( -name "*.bak" -o -name "*~" -o -name ".\#*" -o -name "\#*" \
+                        -o -name "*.rej" -o -name "svn-commit.*" -o -name "*.orig" \
+                        -o -name "*.tmp" -o -name "=~+*" \
+       \) \
+       -print -exec rm -f "{}" \;
 }
 
 _teams () {
