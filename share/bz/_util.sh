@@ -352,7 +352,7 @@ _json_find_key_value () {
 _days_since_commit () {
   local committer=$1
 
-  if _committer_is_team $committer; then
+  if _is_team $committer; then
     echo ""
     return
   fi
