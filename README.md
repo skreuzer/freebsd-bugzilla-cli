@@ -58,7 +58,7 @@ All subcommands support -h for help
 - bz duplicates
 - bz stalk
 
-# Implimenting a New Backend
+# Implementing a New Backend
 ```sh
 cp -R share/bz/pybugz share/bz/$backend
 ```
